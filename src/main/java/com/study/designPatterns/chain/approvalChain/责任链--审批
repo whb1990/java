@@ -1,0 +1,3 @@
+责任链模式实现的简单例子：
+假设某公司针对出差报销业务制定审批流程，有三个审批角色分别是员工（1000元权限）、经理（5000元权限）、以及CEO（10000元权限）。
+对应的Java类：Approver.java  Ceo.java  ChainClient.java  Manager.java  Staff.java
