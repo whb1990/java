@@ -45,7 +45,7 @@ public class InsertSort {
 
     public static void main(String[] args) {
         int[] numArr = {27, 11, 13, 45, 34, 22, 19, 8, 3, 99, 74, 55, 88, 66};
-        System.out.println("**************冒泡排序******************");
+        System.out.println("**************直接插入排序******************");
         System.out.println("排序前：");
         CommonUtils.display(numArr);
         System.out.println("排序后：");
