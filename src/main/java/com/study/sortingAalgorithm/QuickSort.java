@@ -19,6 +19,8 @@ public class QuickSort {
      * 可以看出这个算法可以递归实现，可以用一个函数来实现划分，并返回分界位置。然后不断地这么分下去直到排序完成，可以看出函数的输入参数需要提供序列的首尾位置。
      */
     public static void quickSort(int[] numArr, int left, int right) {
+        //不管使用哪种分割方式，都可以通过递归形式进行排序
+        // 需要注意的是这个if语句不能少，不然没法停止，会导致堆栈溢出的异常。
         if (left < right) {
             //分割数组，找到分割点
             int point = partitionTwo(numArr, left, right);
