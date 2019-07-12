@@ -1,12 +1,29 @@
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
     private static AtomicInteger count = new AtomicInteger(0);
 
     public static void main(String[] args) {
+        Double d1 = 3d;
+        Double d2 = 3d;
+        System.out.println(d1.equals(d2));
+        Double double1 = -0.0000001;
+        System.out.println(double1 > 0);
+        Set<Integer> set = new HashSet<>();
+        set.add(1);
+        set.add(2);
+        set.add(3);
+        Integer integer1 = 1;
+        Integer integer4 = 4;
+        System.out.println(set.contains(integer1) + "    " + set.contains(integer4));
+        Integer integer3 = integer4 - 1;
+        System.out.println("integer3 = " + integer3);
+
         BigDecimal b11 = new BigDecimal(3999);
         BigDecimal b22 = new BigDecimal(0.01);
         if (b11.compareTo(b22) > 0) {
