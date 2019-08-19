@@ -9,6 +9,23 @@ public class Main {
     private static AtomicInteger count = new AtomicInteger(0);
 
     public static void main(String[] args) {
+
+        BigDecimal payAmount = new BigDecimal("400");
+        BigDecimal remaindAmount = payAmount.multiply(new BigDecimal("11")).divide(new BigDecimal("30"), 2, BigDecimal.ROUND_HALF_UP);
+        System.out.println("剩余金额："+remaindAmount.toString());
+        BigDecimal takeOffAmount = payAmount.multiply(new BigDecimal("0.3")).setScale(2, BigDecimal.ROUND_HALF_UP);
+        System.out.println("扣除金额:"+takeOffAmount.toString());
+        /*BigDecimal payAmount = new BigDecimal("100.016");
+        System.out.println(payAmount.setScale(2,BigDecimal.ROUND_HALF_UP));
+        BigDecimal deducAmount = new BigDecimal("20");
+        BigDecimal remainAmount = payAmount.subtract(deducAmount).multiply(BigDecimal.valueOf(9)).multiply(new BigDecimal("0.7")).divide(BigDecimal.valueOf(30)).setScale(2,BigDecimal.ROUND_HALF_UP);
+        System.out.println("剩余：" + remainAmount.toString());
+        BigDecimal bigDecimal = new BigDecimal("0.01");
+        System.out.println(bigDecimal.toString());
+
+        Integer testInt = new Integer(10);
+        System.out.println(testInt.equals(new Integer(10).intValue()));
+
         Double d1 = 3d;
         Double d2 = 3d;
         System.out.println(d1.equals(d2));
@@ -22,10 +39,12 @@ public class Main {
         Integer integer4 = 4;
         System.out.println(set.contains(integer1) + "    " + set.contains(integer4));
         Integer integer3 = integer4 - 1;
-        System.out.println("integer3 = " + integer3);
+        System.out.println("integer3 = " + integer3);*/
 
-        BigDecimal b11 = new BigDecimal(3999);
-        BigDecimal b22 = new BigDecimal(0.01);
+        BigDecimal b11 = new BigDecimal(4000);
+        BigDecimal b22 = new BigDecimal(4000);
+        System.out.print("b11比b22大：");
+        System.out.println(b11.compareTo(b22) < 0);
         if (b11.compareTo(b22) > 0) {
             System.out.println(b11.compareTo(b22) > 0);
         }
