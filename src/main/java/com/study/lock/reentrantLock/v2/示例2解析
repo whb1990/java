@@ -1,0 +1,11 @@
+**(某一次)运行结果：**
+```
+Thread-0 produce(60) --> size=-60
+Thread-4 produce(110) --> size=50
+Thread-2 consume(90) <-- size=-60
+Thread-1 produce(120) --> size=-60
+Thread-3 consume(150) <-- size=-60
+```
+
+**结果说明：**
+“示例2”在“示例1”的基础上去掉了lock锁。在“示例2”中，仓库中最终剩余的产品是-60，而不是我们期望的50。原因是我们没有实现对仓库的互斥访问。

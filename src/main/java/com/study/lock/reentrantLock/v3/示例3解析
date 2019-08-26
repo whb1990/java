@@ -1,0 +1,14 @@
+**(某一次)运行结果：**
+
+```
+Thread-0 produce( 60) --> left=  0, inc= 60, size= 60
+Thread-1 produce(120) --> left= 80, inc= 40, size=100
+Thread-2 consume( 90) <-- left=  0, dec= 90, size= 10
+Thread-3 consume(150) <-- left=140, dec= 10, size=  0
+Thread-4 produce(110) --> left= 10, inc=100, size=100
+Thread-3 consume(150) <-- left= 40, dec=100, size=  0
+Thread-4 produce(110) --> left=  0, inc= 10, size= 10
+Thread-3 consume(150) <-- left= 30, dec= 10, size=  0
+Thread-1 produce(120) --> left=  0, inc= 80, size= 80
+Thread-3 consume(150) <-- left=  0, dec= 30, size= 50
+```
