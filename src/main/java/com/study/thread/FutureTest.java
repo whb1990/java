@@ -10,9 +10,7 @@ import java.util.concurrent.*;
 public class FutureTest {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         ExecutorService executor = Executors.newCachedThreadPool();
-        Callable task = () -> {
-            return "结果";
-        };
+        Callable task = () -> "结果";
         FutureTask ft = new FutureTask(task);
         executor.submit(ft);
         System.out.println(ft.get());
