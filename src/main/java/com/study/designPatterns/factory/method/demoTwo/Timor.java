@@ -9,7 +9,7 @@ public class Timor implements Heros {
 
     @Override
     public void buyHero() {
-        System.out.println("召唤师，恭喜你获得了提莫队长：提莫");
+        System.out.println("召唤师，恭喜你获得了迅捷斥候：提莫");
     }
 
     @Override
