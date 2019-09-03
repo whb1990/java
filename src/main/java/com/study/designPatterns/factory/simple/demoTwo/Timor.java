@@ -1,4 +1,4 @@
-package main.java.com.study.designPatterns.simpleFactoryPattern.demoTwo;
+package main.java.com.study.designPatterns.factory.simple.demoTwo;
 
 /**
  * @author: whb
