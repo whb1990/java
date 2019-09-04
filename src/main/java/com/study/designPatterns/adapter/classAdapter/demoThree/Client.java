@@ -3,7 +3,7 @@ package main.java.com.study.designPatterns.adapter.classAdapter.demoThree;
 /**
  * @author: whb
  * @date: 2019/9/4 15:30
- * @description: 客户端调用
+ * @description: 假设要制作一个笔记本电源适配器（Adapter），能够将家用 220V 交流电（Adaptee）转成直流12V（Target）。
  */
 public class Client {
     public static void main(String[] args) {
