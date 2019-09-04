@@ -1,0 +1,129 @@
+**外观模式示例**
+
+假设小明的爷爷已经80岁了，一个人生活，他每天的习惯是：每次起床时都需要打开灯、打开电视、打开空调；睡觉时关闭灯、关闭电视、关闭空调；
+
+如果不按 外观模式 组织代码，直接编写，则代码如下所示：
+
+```java
+public class Grandpa {
+    public static void main(String[] args){
+        Light light = new Light();
+        Television tv = new Television();
+        Aircondition ad = new Aircondition();
+
+        System.out.println("起床了");
+        light.on();
+        tv.on();
+        ad.on();
+
+        System.out.println("准备睡觉了");
+        light.off();
+        tv.off();
+        ad.off();
+        System.out.println("电器已全部关闭，可以安心睡觉了");
+
+    }
+
+    class Light{
+        public void on(){
+            System.out.println("开灯");
+        }
+
+        public void off(){
+            System.out.println("关灯"); 
+        }
+    }
+
+    class Television {
+        public void on(){
+            System.out.println("打开电视");
+        }
+
+        public void off(){
+            System.out.println("关电视"); 
+        } 
+    }
+
+    class Aircondition {
+        public void on(){
+            System.out.println("打开空调");
+        }
+
+        public void off(){
+            System.out.println("关空调"); 
+        } 
+    }
+}
+```
+
+上面的代码中，`Grandpa`每次起床，都要自己去手动开灯，打开电视，打开空调，每次睡觉前，也要自己一个人手动去关灯，关电视，关空调，对于一个已经80岁的老人来说，太累了。
+
+反思上面出现的问题，是因为灯，电视，空调3个子系统与爷爷（客户）高度耦合，爷爷（客户）严重依赖子系统。爷爷（客户）需要与每个电器（子系统）进行交互，爷爷（客户）操作太繁杂。
+
+小明心想，不能老让爷爷这么劳累啊，于是小明就买了一个智能家具控制器（外观对象/统一接口），这样爷爷只需要一键就能控制灯、电视机、空调的打开和关闭。代码如下所示：
+
+```java
+public class Grandpa {
+    public static void main(String[] args) {
+        ControllerFacade facade = new ControllerFacade();
+        System.out.println("起床了");
+        facade.on();
+
+        System.out.println("准备睡觉了");
+        facade.off();
+        System.out.println("电器已全部关闭，可以安心睡觉了");
+
+    }
+
+    class ControllerFacade {
+        private Light light = new Light();
+        private Television tv = new Television();
+        private Aircondition ad = new Aircondition();
+
+        public void on() {
+            this.light.on();
+            this.tv.on();
+            this.ad.on();
+        }
+
+        public void off() {
+            this.light.off();
+            this.tv.off();
+            this.ad.off();
+        }
+
+    }
+
+    class Light {
+        public void on() {
+            System.out.println("开灯");
+        }
+
+        public void off() {
+            System.out.println("关灯");
+        }
+    }
+
+    class Television {
+        public void on() {
+            System.out.println("打开电视");
+        }
+
+        public void off() {
+            System.out.println("关电视");
+        }
+    }
+
+    class Aircondition {
+        public void on() {
+            System.out.println("打开空调");
+        }
+
+        public void off() {
+            System.out.println("关空调");
+        }
+    }
+}
+```
+
+上面的代码中子系统代码不变，然后增加了一个外观类`ControllerFacade`，最终客户（爷爷）的调用方式就精简许多了。
