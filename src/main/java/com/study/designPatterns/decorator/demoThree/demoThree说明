@@ -1,0 +1,162 @@
+在英雄联盟中，有个叫提莫的英雄。他是负责瓦罗兰大陆的班德尔城安全的侦察兵首领，我们知道英雄升级以后系统会赋予新的技能点供英雄去学习，那么这种英雄学技能的现象我们用装饰器模式又该如何去设计操作？
+
+跟上面的网红奶茶一样，我们把 “提莫学技能” 分成两部分，第一部分就是我们的核心组件，也就是我们的提莫英雄；第二部分我们把提莫的技能抽取共性，成为核心组件的装饰。
+
+首先，我们定义顶层英雄学习技能的接口：
+
+```java
+public interface Hero {
+    /**
+     * 学习技能
+     */
+    void learnSkill();
+}
+```
+
+接着，抽象技能的属性，让子类自己实现：
+
+```java
+public class HeroSkill implements Hero {
+
+    /**
+     * 将顶层的英雄接口以构造传递进来
+     */
+    private Hero timor;
+
+    public HeroSkill(Hero timor) {
+        this.timor = timor;
+    }
+
+    @Override
+    public void learnSkill() {
+        timor.learnSkill();
+    }
+}
+```
+
+接着先实例化提莫对象：
+
+```java
+public class Timor implements Hero {
+
+    /**
+     * 英雄名称
+     */
+    private String name;
+
+    public Timor(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void learnSkill() {
+        System.out.println(name + " 学习了以上技能！");
+    }
+}
+```
+
+接着，轮到提莫开始学技能啦：
+
+```java
+public class Skill_Q extends HeroSkill {
+    /**
+     * 技能名称
+     */
+    private String skillName;
+
+    public Skill_Q(Hero timor, String skillName) {
+        super(timor);
+        this.skillName = skillName;
+    }
+
+    @Override
+    public void learnSkill() {
+        System.out.println("学习了Q技能：" + skillName);
+        super.learnSkill();
+    }
+}
+```
+
+```java
+public class Skill_W extends HeroSkill {
+    /**
+     * 技能名称
+     */
+    private String skillName;
+
+    public Skill_W(Hero timor, String skillName) {
+        super(timor);
+        this.skillName = skillName;
+    }
+
+    @Override
+    public void learnSkill() {
+        System.out.println("学习了W技能：" + skillName);
+        super.learnSkill();
+    }
+}
+```
+
+```java
+public class Skill_E extends HeroSkill {
+    /**
+     * 技能名称
+     */
+    private String skillName;
+
+    public Skill_E(Hero timor, String skillName) {
+        super(timor);
+        this.skillName = skillName;
+    }
+
+    @Override
+    public void learnSkill() {
+        System.out.println("学习了E技能：" + skillName);
+        super.learnSkill();
+    }
+}
+```
+
+```java
+public class Skill_R extends HeroSkill {
+    /**
+     * 技能名称
+     */
+    private String skillName;
+
+    public Skill_R(Hero timor, String skillName) {
+        super(timor);
+        this.skillName = skillName;
+    }
+
+    @Override
+    public void learnSkill() {
+        System.out.println("学习了R技能：" + skillName);
+        super.learnSkill();
+    }
+}
+```
+
+为了方便测试，我把提莫的技能名称放在了构造函数这里，下面就是测试：
+
+```java
+public class Client {
+
+    public static void main(String[] args) {
+        Hero hero = new Timor("提莫队长");
+        HeroSkill skill = new HeroSkill(hero);
+
+        HeroSkill q = new Skill_Q(skill, "致盲吹箭");
+        HeroSkill w = new Skill_W(skill, "小莫快跑");
+        HeroSkill e = new Skill_E(skill, "毒性射击");
+        HeroSkill r = new Skill_R(skill, "种蘑菇");
+        //学习技能
+        q.learnSkill();
+        w.learnSkill();
+        e.learnSkill();
+        r.learnSkill();
+    }
+}
+```
+
+装饰器模式是继承的一种替代模式，其优点是可以动态扩展一个实现类的功能。这种设计模式下不仅可以扩展一个类的功能，也可以动态增加功能，动态撤销。但缺点就是多层装饰使用起来相对比较复杂。本质是将具体功能职责划分（例如区分核心组件以及附加属性职责）减少子类直接继承父类的耦合性。

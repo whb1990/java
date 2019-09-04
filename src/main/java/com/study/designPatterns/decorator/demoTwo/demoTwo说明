@@ -1,0 +1,138 @@
+假设现在想去奶茶店配置一杯焦糖奶茶，这杯奶茶可以根据我们自己的喜欢添加加布丁、青稞等等。现在要计算调制这样一杯网红奶茶花了多少钱，那么通过代码的方式思考应该如何去做？
+
+首先在不考虑设计模式的情况下，如果按照传统的编码思路，会先写一个抽象的焦糖奶茶基类、接着焦糖奶茶基类若不能满足需要（基本上不满足），比如要在奶茶的基础上加青稞，就会写一个焦糖青稞奶茶类去继承焦糖奶茶基类，返回新的价格（附加青稞的价格）；比如现在又不想要青稞（客户的需求总是很难满足呐 ~），想要加布丁，那么就会又写一个焦糖布丁奶茶去继承奶茶基类、后面的以此类推。虽然这种方法可以解决问题，但是这样层层继承，子类会比较膨胀，耦合性太强。
+
+那么，换一种思路，既然这杯焦糖奶茶有多种可添加材料，但是它的本质依旧是一杯奶茶，添加的材料只是它附加的一种属性。按照面向对象的思想，既然附加的材料属性有很多，那么就可以将材料属性单独抽取成一个父类材料对象（也就是先不管奶茶，只针对附加的材料，这样做的好处是低耦合，解决子类过于膨胀的问题），让各种各样的材料分别继承材料基类即可；因此也就可以这样定义，焦糖奶茶就是我们的核心组件、布丁和青稞以及别的材料是装饰者。
+
+综上，我们可以首先定义一个顶层的接口，这个接口（主要是针对奶茶进行操作）定义的行为规范如：这杯奶茶花了多少钱，使用了什么材料，于是乎就有了以下代码
+```Java
+public interface DrinkMiklTea {
+    /**
+     * 计算一杯奶茶的价格
+     */
+    BigDecimal getTotalPrice();
+
+    /**
+     * 奶茶使用的材料
+     */
+    String useMaterial();
+}
+```
+
+刚才也说了，附加的多种材料，可以单独把它抽象出来，将其设计成一个抽象类，让子类去设计定义具体的材料（使用的是青稞还是布丁）。但是，这个材料基类单独定义没有任何意义，需要将材料 放进奶茶中才能完成代码的需求（计算的是总价）。因此，这个基类需要实现最顶层的奶茶接口，然后通过构造函数，将顶层接口进行赋值操作。为什么要将顶层接口通过构造函数进行赋值操作，因为只有赋值操作以后，才可以再次调用顶层接口里面的方法：
+
+```Java
+public abstract class MilkTeaMaterial implements DrinkMiklTea {
+
+    /**
+     * 将顶层接口以构造参数的方式传递进来
+     */
+    private DrinkMiklTea drinkMiklTea;
+
+    public MilkTeaMaterial(DrinkMiklTea drinkMiklTea) {
+        this.drinkMiklTea = drinkMiklTea;
+    }
+
+    @Override
+    public BigDecimal getTotalPrice() {
+        return drinkMiklTea.getTotalPrice();
+    }
+
+    @Override
+    public String useMaterial() {
+        return drinkMiklTea.useMaterial();
+    }
+}
+
+```
+
+接口和基类已经简单介绍和封装完了。那么接下来就定义上面提到的角色。
+
+首先是焦糖奶茶，刚才说了，焦糖奶茶是这个功能的核心组件，而且我们也定义了最顶层的奶茶接口，所以，焦糖奶茶只需要实现顶层接口，在里面进行赋值返回操作即可，假设这杯不含任何材料的纯粹焦糖奶茶价值12毛币，那么就有以下代码：
+
+```java
+public class CaramelMilkTea implements DrinkMiklTea {
+
+    @Override
+    public BigDecimal getTotalPrice() {
+        return new BigDecimal("12");
+    }
+
+    @Override
+    public String useMaterial() {
+        return "焦糖奶茶";
+    }
+}
+
+```
+
+定义完了奶茶，再定义客户可能想要在里面添加的青稞，布丁等等。因为在上面已经定义了添加材料的基类，现在只需要继承材料基类然后在子类设置附加材料的价格就可以满足计算价格以及统计材料的任务：
+
+```java
+public class Pudding extends MilkTeaMaterial {
+
+    public Pudding(DrinkMiklTea drinkMiklTea) {
+        super(drinkMiklTea);
+    }
+
+    @Override
+    public BigDecimal getTotalPrice() {
+        //在父类基础上价格+2
+        return super.getTotalPrice().add(new BigDecimal("2")).setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    @Override
+    public String useMaterial() {
+        //在父类的材料基础上+布丁
+        return super.useMaterial() + " 添加了：布丁";
+    }
+}
+
+```
+
+```java
+public class HighlandBarley extends MilkTeaMaterial {
+
+    public HighlandBarley(DrinkMiklTea drinkMiklTea) {
+        super(drinkMiklTea);
+    }
+
+    @Override
+    public BigDecimal getTotalPrice() {
+        //在父类基础上价格+3
+        return super.getTotalPrice().add(new BigDecimal("3")).setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    @Override
+    public String useMaterial() {
+        //在父类的材料基础上+青稞
+        return super.useMaterial() + " 添加了：青稞";
+    }
+}
+
+```
+
+焦糖奶茶附加材料青稞和布丁都已经准备好了，下面就等着添加测试使用了。
+
+下面就开始测试这杯网红奶茶的价格（老板我现在要布丁以及双份的青稞）
+
+```java
+public class Client {
+
+    public static void main(String[] args) {
+        //实例化一个焦糖奶茶
+        DrinkMiklTea drinkMiklTea = new CaramelMilkTea();
+        System.out.println(drinkMiklTea.useMaterial() + " 总价：" + drinkMiklTea.getTotalPrice().toString());
+        //添加布丁
+        drinkMiklTea = new Pudding(drinkMiklTea);
+        System.out.println(drinkMiklTea.useMaterial()+" 总价："+drinkMiklTea.getTotalPrice().toString());
+        //添加青稞
+        drinkMiklTea = new HighlandBarley(drinkMiklTea);
+        System.out.println(drinkMiklTea.useMaterial()+" 总价："+drinkMiklTea.getTotalPrice().toString());
+        //添加第二份青稞
+        drinkMiklTea = new HighlandBarley(drinkMiklTea);
+        System.out.println(drinkMiklTea.useMaterial()+" 总价："+drinkMiklTea.getTotalPrice().toString());
+    }
+}
+
+```
