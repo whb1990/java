@@ -1,0 +1,177 @@
+## 说明
+
+**demoTwo是以申请聚餐费用为例演示责任链模式。**
+
+### 背景
+申请聚餐费用的大致流程一般是：由申请人先填写申请单，然后交给领导审查，如果申请批准下来了，领导会通知申请人审批通过，然后申请人去财务核领费用，如果没有核准，领导会通知申请人审批未通过，此事也就此作罢了。
+
+不同级别的领导，对于审批的额度是不一样的，比如：项目经理只能审批500元以内的申请；部门经理能审批1000元以内的申请；而总经理可以审核任意额度的申请。
+
+也就是说，当某人提出聚餐费用申请的请求后，该请求会由项目经理、部门经理、总经理之中的某一位领导来进行相应的处理，但是提出申请的人并不知道最终会由谁来处理他的请求，一般申请人是把自己的申请提交给项目经理，或许最后是由总经理来处理他的请求，但是申请人并不知道应该由总经理来处理他的申请请求。
+
+### 分析
+
+当某人提出聚餐费用申请的请求后，该请求会在项目经理-部门经理-总经理这样一条领导处理链上进行传递，发出请求的人并不知道谁会来处理他的请求，每个领导会根据自己的职责范围，来判断是处理请求还是把请求交给更高级的领导，只要有领导处理了，传递就结束了。
+
+需要把每位领导的处理独立出来，实现成单独的职责处理对象，然后为它们提供一个公共的、抽象的父职责对象，这样就可以在客户端来动态的组合职责链，实现不同的功能要求了。
+
+### 代码实现
+
+####定义职责的抽象类
+
+首先来看看定义所有职责的抽象类，也就是所有职责的外观，在这个类里面持有下一个处理请求的对象，同时还要定义业务处理方法，示例代码如下：
+```java
+/**
+ * 定义职责对象的接口
+ */
+public abstract class Handler {
+    /**
+     * 持有下一个处理请求的对象
+     */
+    protected Handler successor = null;
+    /**
+     * 设置下一个处理请求的对象
+     * @param successor 下一个处理请求的对象
+     */
+    public void setSuccessor(Handler successor){
+       this.successor = successor;
+    }
+    /**
+     * 处理聚餐费用的申请
+     * @param user 申请人
+     * @param fee 申请的钱数
+     * @return 成功或失败的具体通知
+     */
+    public abstract String handleFeeRequest(String user,double fee);
+}
+```
+
+#### 实现各自的职责
+
+现在实现的处理聚餐费用流程是：申请人提出的申请交给项目经理处理，项目经理的处理权限是500元以内，超过500元，把申请转给部门经理处理，部门经理的处理权限是1000元以内，超过1000元，把申请转给总经理处理。
+
+分析上述流程，对请求主要有三个处理环节，把它们分别实现成为职责对象，一个对象实现一个环节的处理功能，这样就会比较简单。
+
+先看看项目经理的处理吧，示例代码如下：
+```java
+public class ProjectManager extends Handler{
+    @Override
+    public String handleFeeRequest(String user, double fee) {
+        String str = "";
+        //项目经理的权限比较小，只能在500以内
+        if(fee < 500){
+            //为了测试，简单点，只同意小李的
+            if("小李".equals(user)){
+                str = "项目经理同意"+user+"聚餐费用"+fee+"元的请求";
+            }else{
+                //其它人一律不同意
+                str = "项目经理不同意"+user+"聚餐费用"+fee+"元的请求";
+            }
+            return str;
+        }else{
+            //超过500，继续传递给级别更高的人处理
+            if(this.successor!=null){
+                return successor.handleFeeRequest(user, fee);
+            }
+        }
+        return str;
+    }
+}
+```
+接下来看看部门经理的处理，示例代码如下：
+```java
+public class DepManager extends Handler{ 
+    @Override
+    public String handleFeeRequest(String user, double fee) {
+        String str = "";
+        //部门经理的权限只能在1000以内
+        if(fee < 1000){
+            //为了测试，简单点，只同意小李申请的
+            if("小李".equals(user)){
+                str = "部门经理同意"+user+"聚餐费用"+fee+"元的请求";
+            }else{
+                //其它人一律不同意
+                str = "部门经理不同意"+user+"聚餐费用"+fee+"元的请求";
+            }
+            return str;
+        }else{
+            //超过1000，继续传递给级别更高的人处理
+            if(this.successor!=null){
+                return this.successor.handleFeeRequest(user, fee);
+            }
+        }
+        return str;
+    }
+}
+```
+再看总经理的处理，示例代码如下：
+```java
+public class GeneralManager extends Handler{
+    public String handleFeeRequest(String user, double fee) {
+        String str = "";
+        //总经理的权限很大，只要请求到了这里，他都可以处理
+        if(fee >= 1000){
+            //为了测试，简单点，只同意小李的
+            if("小李".equals(user)){
+                str = "总经理同意"+user+"聚餐费用"+fee+"元的请求";
+            }else{
+                //其它人一律不同意
+                str = "总经理不同意"+user+"聚餐费用"+fee+"元的请求";
+            }
+            return str;
+        }else{
+            //如果还有后继的处理对象，继续传递
+            if(this.successor!=null){
+                return successor.handleFeeRequest(user, fee);
+            }
+        }
+        return str;
+    }
+}
+```
+
+#### 使用职责链
+
+那么客户端如何使用职责链呢，最重要的就是要先构建职责链，然后才能使用。示例代码如下：
+```java
+public class Client {
+    public static void main(String[] args) {
+        //先要组装职责链   
+        Handler h1 = new GeneralManager();
+        Handler h2 = new DepManager();
+        Handler h3 = new ProjectManager();
+        h3.setSuccessor(h2);
+        h2.setSuccessor(h1);
+     
+        //开始测试
+        String ret1 = h3.handleFeeRequest("小李", 300);
+        System.out.println("the ret1="+ret1); 
+        String ret2 = h3.handleFeeRequest("小张", 300);
+        System.out.println("the ret2="+ret2); 
+     
+        String ret3 = h3.handleFeeRequest("小李", 600);
+        System.out.println("the ret3="+ret3); 
+        String ret4 = h3.handleFeeRequest("小张", 600);
+        System.out.println("the ret4="+ret4); 
+     
+        String ret5 = h3.handleFeeRequest("小李", 1200); 
+        System.out.println("the ret5="+ret5); 
+        String ret6 = h3.handleFeeRequest("小张", 1200);
+        System.out.println("the ret6="+ret6); 
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
