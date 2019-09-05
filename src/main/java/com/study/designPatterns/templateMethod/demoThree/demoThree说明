@@ -1,0 +1,123 @@
+demoThree是以模拟网课制作演示模板方法模式；
+
+制作一节网课的步骤可以简化为4个步骤：
+1. 制作PPT
+2. 录制视频
+3. 编写笔记
+4. 提供课程资料
+其中1、2、3的动作在所有课程中的固定不变的，步骤3可有可无，步骤4在每个课程都不同（有些课程需要提供源代码，有些需要提供图片文件等）。
+
+我们可以在父类中确定整个流程的循序，并实现固定不变的步骤，而把不固定的步骤留给子类实现。甚至可以通过一个钩子方法，让子类来决定流程中某个方法的执行与否。
+
+抽象类定义如下：
+
+```java
+public abstract class ACourse {
+
+    protected final void makeCourse() {
+        this.makePPT();
+        this.makeVideo();
+        if (needWriteArticle()) {
+            this.writeArticle();
+        }
+        this.packageCourse();
+    }
+
+    final void makePPT() {
+        System.out.println("1. 制作PPT");
+    }
+
+    final void makeVideo() {
+        System.out.println("2. 制作视频");
+    }
+
+    final void writeArticle() {
+        System.out.println("3. 编写课程笔记");
+    }
+
+    //钩子方法
+    protected boolean needWriteArticle() {
+        return false;
+    }
+
+    abstract void packageCourse();
+}
+```
+
+其中的 `makeCourse` 方法是模板方法，它定义了制作网课的基本流程，`makePPT`、`makeVideo`、`writeArticle` 这三个步骤在所有课程中都是固定的，所以用 `final` 关键字修饰；
+`packageCourse `方法在所有课程中都可能不一样，所以声明为抽象方法，由子类自行实现；
+钩子方法 `needWriteArticle` 返回一个 `boolean` 类型的值，控制是否编写课程笔记
+
+子类 `JavaCourse`，实现了抽象方法 `packageCourse`，重写了钩子方法 `needWriteArticle`
+
+```java
+public class JavaCourse extends ACourse {
+    @Override
+    void packageCourse() {
+        System.out.println("4. 提供Java课程源代码");
+    }
+
+    @Override
+    protected boolean needWriteArticle() {
+        return true;
+    }
+}
+```
+
+子类 `FECourse`，实现了抽象方法 `packageCourse`，重写了钩子方法 `needWriteArticle`，其中把钩子方法的结果交给客户端确定
+
+```java
+public class FECourse extends ACourse {
+    private boolean needWriteArticleFlag = false;
+    @Override
+    void packageCourse() {
+        System.out.println("4.1 提供课程的前端代码");
+        System.out.println("4.2 提供课程的图片等多媒体素材");
+    }
+
+    public FECourse(boolean needWriteArticleFlag) {
+        this.needWriteArticleFlag = needWriteArticleFlag;
+    }
+
+    @Override
+    protected boolean needWriteArticle() {
+        return this.needWriteArticleFlag;
+    }
+}
+```
+
+客户端测试：
+
+```java
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("Java课程start---");
+        ACourse javaCourse = new JavaCourse();
+        javaCourse.makeCourse();
+        System.out.println("Java课程end---\n");
+
+
+        System.out.println("前端课程start---");
+        ACourse feCourse = new FECourse(false);
+        feCourse.makeCourse();
+        System.out.println("前端课程end---");
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
