@@ -1,0 +1,236 @@
+## 功能链
+
+在实际开发中，经常会出现一个把职责链稍稍变形的用法。在标准的职责链中，一个请求在职责链中传递，只要有一个对象处理了这个请求，就会停止。
+
+>现在稍稍变一下，改成一个请求在职责链中传递，每个职责对象负责处理请求的某一方面的功能，处理完成后，不是停止，而是继续向下传递请求，当请求通过很多职责对象处理过后，功能也就处理完了，把这样的职责链称为功能链。
+
+考虑这样一个功能，在实际应用开发中，在进行业务处理之前，通常需要进行权限检查、通用数据校验、数据逻辑校验等处理，然后才开始真正的业务逻辑实现。可以把这些功能分散到一个功能链中，这样做的目的是使程序结构更加灵活，而且复用性会更好，比如通用的权限检查就只需要做一份，然后就可以在多个功能链中使用了。
+
+有些朋友看到这里，可能会想，这不是可以使用装饰模式来实现吗？没错，可以使用装饰模式来实现这样的功能，但是职责链会更灵活一些，因为装饰模式是在已有的功能上增加新的功能，多个装饰器之间会有一定的联系；而职责链模式的各个职责对象实现的功能，相互之间是没有关联的，是自己实现属于自己处理的那一份功能。
+
+可能有些朋友会想到这很类似于在Web应用开发中的过滤器Filter，没错，过滤器链就类似于一个功能链，每个过滤器负责自己的处理，然后转交给下一个过滤器，直到把所有的过滤器都走完，然后进入到Servlet里面进行处理。最常见的过滤器功能，比如权限检查、字符集转换等，基本上都是Web应用的标配。
+
+接下来在示例中，实现这样的功能：实现商品销售的业务处理，在真正进行销售的业务处理之前，需要对传入处理的数据，进行权限检查、通用数据检查和数据逻辑检查，只有这些检查都能通过的情况下，才说明传入的数据是正确的、有效的数据，才可以进行真正的业务功能处理。
+
+1. 首先定义已有的业务功能和封装业务数据的对象，用前面出现过的那个保存销售信息的业务，为了简单，就不去定义接口了，示例代码如下：
+
+```java
+/**
+ * 商品销售管理模块的业务处理
+ */
+public class GoodsSaleEbo {
+    /**
+     * 保存销售信息，本来销售数据应该是多条，太麻烦了，为了演示，简单点
+     * @param user 操作人员
+     * @param customer 客户
+     * @param saleModel 销售数据
+     * @return 是否保存成功
+     */
+    public boolean sale(String user,String customer,SaleModel saleModel){
+        //如果全部在这里处理，基本的顺序是
+        //1：权限检查
+        //2：通用数据检查（这个也可能在表现层已经作过了）
+        //3：数据逻辑校验
+     
+        //4：真正的业务处理
+     
+        //但是现在通过功能链来做，这里就主要负责构建链
+        //暂时还没有功能链，等实现好了各个处理对象再回来添加
+        return true;
+    }
+}
+```
+对应的封装销售数据的对象，示例代码如下：
+```java
+/**
+ * 封装销售单的数据，简单的示意一下
+ */
+public class SaleModel {
+    /**
+     * 销售的商品
+     */
+    private String goods;
+    /**
+     * 销售的数量
+     */
+    private int saleNum;
+    public String getGoods() {
+        return goods;
+    }
+    public void setGoods(String goods) {
+        this.goods = goods;
+    }
+    public int getSaleNum() {
+        return saleNum;
+    }
+    public void setSaleNum(int saleNum) {
+        this.saleNum = saleNum;
+    }
+    @Override
+    public String toString(){
+        return "商品名称="+goods+",销售数量="+saleNum;
+    }
+}
+```
+
+2. 定义一个用来处理保存销售数据功能的职责对象的接口，示例代码如下：
+
+```java
+/**
+ * 定义职责对象的接口
+ */
+public abstract class SaleHandler {
+    /**
+     * 持有下一个处理请求的对象
+     */
+    protected SaleHandler successor = null;
+    /**
+     * 设置下一个处理请求的对象
+     * @param successor 下一个处理请求的对象
+     */
+    public void setSuccessor(SaleHandler successor){
+        this.successor = successor;
+    }
+    /**
+     * 处理保存销售信息的请求
+     * @param user 操作人员
+     * @param customer 客户
+     * @param saleModel 销售数据
+     * @return 是否处理成功
+     */
+    public abstract boolean sale(String user,String customer,SaleModel saleModel);
+}
+```
+
+3. 实现各个职责处理对象，每个职责对象负责请求的一个方面的处理，把这些职责对象都走完了，功能也就实现完了。先定义处理安全检查的职责对象，示例代码如下：
+
+```java
+/**
+ * 进行权限检查的职责对象
+ */
+public class SaleSecurityCheck extends SaleHandler{
+    public boolean sale(String user, String customer, SaleModel saleModel) {
+        //进行权限检查，简单点，就小李能通过
+        if("小李".equals(user)){
+            return this.successor.sale(user, customer, saleModel);
+        }else{
+            System.out.println("对不起"+user+"，你没有保存销售信息的权限");
+            return false;
+        }     
+    }
+}
+```
+接下来定义通用数据检查的职责对象，示例代码如下：
+```java
+/**
+ * 进行数据通用检查的职责对象
+ */
+public class SaleDataCheck extends SaleHandler{
+    public boolean sale(String user, String customer, SaleModel saleModel) {
+        //进行数据通用检查，稍麻烦点，每个数据都要检测
+        if(user==null || user.trim().length()==0){
+            System.out.println("申请人不能为空");
+            return false;
+        }
+        if(customer==null || customer.trim().length()==0){
+            System.out.println("客户不能为空");
+            return false;
+        }
+        if(saleModel==null ){
+            System.out.println("销售商品的数据不能为空");
+            return false;
+        }
+        if(saleModel.getGoods() == null || saleModel.getGoods().trim().length()==0){
+            System.out.println("销售的商品不能为空");
+            return false;
+        }
+        if(saleModel.getSaleNum()==0){
+            System.out.println("销售商品的数量不能为0");
+            return false;
+        }     
+        //如果通过了上面的检测，那就向下继续执行
+        return this.successor.sale(user, customer, saleModel);
+     }
+}
+```
+
+再看看进行数据逻辑检查的职责对象，示例代码如下：
+```java
+/**
+ * 进行数据逻辑检查的职责对象
+ */
+public class SaleLogicCheck extends SaleHandler{
+    public boolean sale(String user, String customer, SaleModel saleModel) {
+        //进行数据的逻辑检查，比如检查ID的唯一性，主外键的对应关系等等
+        //这里应该检查这种主外键的对应关系，比如销售商品是否存在
+        //为了演示简单，直接通过吧
+     
+        //如果通过了上面的检测，那就向下继续执行
+        return this.successor.sale(user, customer, saleModel);
+    }
+}
+```
+最后是真正的业务处理的职责对象，示例代码如下：
+```java
+/**
+ * 真正处理销售的业务功能的职责对象
+ */
+public class SaleMgr extends SaleHandler{
+    public boolean sale(String user, String customer, SaleModel saleModel) {
+        //进行真正的业务逻辑处理
+        System.out.println(user+"保存了"+customer+"购买 "+saleModel+" 的销售数据");
+        return true;
+    }
+}
+```
+
+4. 实现好了各个职责对象处理，回过头来看看如何具体实现业务处理，在业务对象里面进行功能链的组合，示例代码如下：
+```java
+public class GoodsSaleEbo {
+    /**
+     * 保存销售信息，本来销售数据应该是多条，太麻烦了，为了演示，简单点
+     * @param user 操作人员
+     * @param customer 客户
+     * @param saleModel 销售数据
+     * @return 是否保存成功
+     */
+    public boolean sale(String user,String customer,SaleModel saleModel){
+        //如果全部在这里处理，基本的顺序是
+        //1：权限检查
+        //2：通用数据检查（这个也可能在表现层已经作过了）
+        //3：数据逻辑校验
+     
+        //4：真正的业务处理
+     
+        //但是现在通过功能链来做，这里就主要负责构建链
+        SaleSecurityCheck ssc = new SaleSecurityCheck();
+        SaleDataCheck sdc = new SaleDataCheck();
+        SaleLogicCheck slc = new SaleLogicCheck();
+        SaleMgr sd = new SaleMgr();
+        ssc.setSuccessor(sdc);
+        sdc.setSuccessor(slc);
+        slc.setSuccessor(sd);
+        //向链上的第一个对象发出处理的请求
+        return ssc.sale(user, customer, saleModel);
+    }
+}
+```
+
+5. 写个客户端，调用业务对象，测试一下看看，示例代码如下：
+
+```java
+public class Client {
+    public static void main(String[] args) {
+        //创建业务对象
+        GoodsSaleEbo ebo = new GoodsSaleEbo();
+        //准备测试数据
+        SaleModel saleModel = new SaleModel();
+        saleModel.setGoods("张学友怀旧经典");
+        saleModel.setSaleNum(10);
+     
+        //调用业务功能
+        ebo.sale("小李", "张三", saleModel);
+        ebo.sale("小张", "李四", saleModel);
+    }
+}
+```

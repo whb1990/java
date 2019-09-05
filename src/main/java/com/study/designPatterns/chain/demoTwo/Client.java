@@ -14,7 +14,7 @@ public class Client {
         h3.setSuccessor(h2);
         h2.setSuccessor(h1);
 
-        //开始测试
+        //开始测试申请聚餐费用
         String ret1 = h3.handleFeeRequest("小李", 300);
         System.out.println("the ret1=" + ret1);
         String ret2 = h3.handleFeeRequest("小张", 300);
@@ -29,5 +29,10 @@ public class Client {
         System.out.println("the ret5=" + ret5);
         String ret6 = h3.handleFeeRequest("小张", 1200);
         System.out.println("the ret6=" + ret6);
+
+        //开始测试申请差旅费用
+        h3.handlePreFeeRequest("小张", 3000);
+        h3.handlePreFeeRequest("小张", 6000);
+        h3.handlePreFeeRequest("小张", 32000);
     }
 }

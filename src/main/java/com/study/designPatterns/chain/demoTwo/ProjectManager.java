@@ -27,4 +27,20 @@ public class ProjectManager extends Handler {
         }
         return str;
     }
+
+    @Override
+    public boolean handlePreFeeRequest(String user, double requestFee) {
+        //项目经理的权限比较小，只能在5000以内
+        if (requestFee < 5000) {
+            //工作需要嘛，统统同意
+            System.out.println("项目经理同意" + user + "预支差旅费用" + requestFee + "元的请求");
+            return true;
+        } else {
+            //超过5000，继续传递给级别更高的人处理
+            if (this.successor != null) {
+                return this.successor.handlePreFeeRequest(user, requestFee);
+            }
+        }
+        return false;
+    }
 }

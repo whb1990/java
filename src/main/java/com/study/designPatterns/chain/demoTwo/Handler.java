@@ -28,4 +28,13 @@ public abstract class Handler {
      * @return 成功或失败的具体通知
      */
     public abstract String handleFeeRequest(String user, double fee);
+
+    /**
+     * 处理预支差旅费用的申请
+     *
+     * @param user       申请人
+     * @param requestFee 申请的钱数
+     * @return 是否同意
+     */
+    public abstract boolean handlePreFeeRequest(String user, double requestFee);
 }

@@ -161,6 +161,803 @@ public class Client {
     }
 }
 ```
+### 处理多种请求
+
+上面的示例是同一个职责链处理一种请求的情况，现在有这样的需求，还是费用申请的功能，这次是申请预支差旅费，假设还是同一流程，也就是组合同一个职责链，从项目经理-传递给部门经理-传递给总经理，虽然流程相同，但是每个处理类需要处理两种请求，它们的具体业务逻辑是不一样的。
+
+#### 简单的处理方式
+
+简单的处理方式就是为每种业务单独定义一个方法，然后客户端根据不同的需要调用不同的方法，还是通过代码来示例一下。注意这里故意的把两个方法做的有些不一样，一个是返回String类型的值，一个是返回boolean类型的值；另外一个是返回到客户端再输出信息，一个是直接在职责处理里面就输出信息。
+
+1. 改造职责对象的接口，添加上新的业务方法。
+
+```java
+public abstract class Handler {
+    /**
+     * 持有下一个处理请求的对象
+     */
+    protected Handler successor = null;
+    /**
+     * 设置下一个处理请求的对象
+     * @param successor 下一个处理请求的对象
+     */
+    public void setSuccessor(Handler successor){
+        this.successor = successor;
+    }
+    /**
+     * 处理聚餐费用的申请
+     * @param user 申请人
+     * @param fee 申请的钱数
+     * @return 成功或失败的具体通知
+     */
+    public abstract String handleFeeRequest(String user,double fee);
+    /**
+     * 处理预支差旅费用的申请
+     * @param user 申请人
+     * @param requestFee 申请的钱数
+     * @return 是否同意
+     */
+    public abstract boolean handlePreFeeRequest(String user,double requestFee);
+}
+```
+
+2. 职责的接口发生了改变，对应的处理类也要改变，这几个处理类是类似的，原有的功能不变，然后在新的实现方法里面，同样判断一下是否属于自己处理的范围，如果属于自己处理的范围那就处理，否则就传递到下一个处理。
+
+**项目经理：**
+
+```java
+public class ProjectManager extends Handler {
+    @Override
+    public String handleFeeRequest(String user, double fee) {
+        String str = "";
+        //项目经理的权限比较小，只能在500以内
+        if (fee < 500) {
+            //为了测试，简单点，只同意小李的
+            if ("小李".equals(user)) {
+                str = "项目经理同意" + user + "聚餐费用" + fee + "元的请求";
+            } else {
+                //其它人一律不同意
+                str = "项目经理不同意" + user + "聚餐费用" + fee + "元的请求";
+            }
+            return str;
+        } else {
+            //超过500，继续传递给级别更高的人处理
+            if (this.successor != null) {
+                return successor.handleFeeRequest(user, fee);
+            }
+        }
+        return str;
+    }
+
+    @Override
+    public boolean handlePreFeeRequest(String user, double requestFee) {
+        //项目经理的权限比较小，只能在5000以内
+        if (requestFee < 5000) {
+            //工作需要嘛，统统同意
+            System.out.println("项目经理同意" + user + "预支差旅费用" + requestFee + "元的请求");
+            return true;
+        } else {
+            //超过5000，继续传递给级别更高的人处理
+            if (this.successor != null) {
+                return this.successor.handlePreFeeRequest(user, requestFee);
+            }
+        }
+        return false;
+    }
+}
+```
+
+**部门经理：**
+
+```java
+public class DepManager extends Handler {
+    @Override
+    public String handleFeeRequest(String user, double fee) {
+        String str = "";
+        //部门经理的权限只能在1000以内
+        if (fee < 1000) {
+            //为了测试，简单点，只同意小李申请的
+            if ("小李".equals(user)) {
+                str = "部门经理同意" + user + "聚餐费用" + fee + "元的请求";
+            } else {
+                //其它人一律不同意
+                str = "部门经理不同意" + user + "聚餐费用" + fee + "元的请求";
+            }
+            return str;
+        } else {
+            //超过1000，继续传递给级别更高的人处理
+            if (this.successor != null) {
+                return this.successor.handleFeeRequest(user, fee);
+            }
+        }
+        return str;
+    }
+
+    @Override
+    public boolean handlePreFeeRequest(String user, double requestFee) {
+        //部门经理的权限20000以内
+        if (requestFee < 20000) {
+            //工作需要嘛，统统同意
+            System.out.println("部门经理同意" + user + "预支差旅费用" + requestFee + "元的请求");
+            return true;
+        } else {
+            //超过20000，继续传递给级别更高的人处理
+            if (this.successor != null) {
+                return this.successor.handlePreFeeRequest(user, requestFee);
+            }
+        }
+        return false;
+    }
+}
+```
+**总经理：**
+
+```java
+public class GeneralManager extends Handler {
+    @Override
+    public String handleFeeRequest(String user, double fee) {
+        String str = "";
+        //总经理的权限很大，只要请求到了这里，他都可以处理
+        if (fee >= 1000) {
+            //为了测试，简单点，只同意小李的
+            if ("小李".equals(user)) {
+                str = "总经理同意" + user + "聚餐费用" + fee + "元的请求";
+            } else {
+                //其它人一律不同意
+                str = "总经理不同意" + user + "聚餐费用" + fee + "元的请求";
+            }
+            return str;
+        } else {
+            //如果还有后继的处理对象，继续传递
+            if (this.successor != null) {
+                return successor.handleFeeRequest(user, fee);
+            }
+        }
+        return str;
+    }
+
+    @Override
+    public boolean handlePreFeeRequest(String user, double requestFee) {
+        //总经理的权限50000以内
+        if (requestFee < 50000) {
+            //工作需要嘛，统统同意
+            System.out.println("总经理同意" + user + "预支差旅费用" + requestFee + "元的请求");
+            return true;
+        } else {
+            //如果还有后继的处理对象，继续传递
+            if (this.successor != null) {
+                return this.successor.handlePreFeeRequest(user, requestFee);
+            }
+        }
+        return false;
+    }
+}
+```
+
+3. 客户端调用
+
+```java
+public class Client {
+    public static void main(String[] args) {
+        //先要组装职责链
+        Handler h1 = new GeneralManager();
+        Handler h2 = new DepManager();
+        Handler h3 = new ProjectManager();
+        h3.setSuccessor(h2);
+        h2.setSuccessor(h1);
+
+        //开始测试申请聚餐费用
+        String ret1 = h3.handleFeeRequest("小李", 300);
+        System.out.println("the ret1=" + ret1);
+        String ret2 = h3.handleFeeRequest("小张", 300);
+        System.out.println("the ret2=" + ret2);
+
+        String ret3 = h3.handleFeeRequest("小李", 600);
+        System.out.println("the ret3=" + ret3);
+        String ret4 = h3.handleFeeRequest("小张", 600);
+        System.out.println("the ret4=" + ret4);
+
+        String ret5 = h3.handleFeeRequest("小李", 1200);
+        System.out.println("the ret5=" + ret5);
+        String ret6 = h3.handleFeeRequest("小张", 1200);
+        System.out.println("the ret6=" + ret6);
+
+        //开始测试申请差旅费用
+        h3.handlePreFeeRequest("小张", 3000);
+        h3.handlePreFeeRequest("小张", 6000);
+        h3.handlePreFeeRequest("小张", 32000);
+    }
+}
+```
+
+#### 通用请求处理方式
+
+简单处理方式实现起来很容易，但是有一个明显的问题就是只要增加一个业务，就需要修改职责的接口，这是很不灵活的，Java开发中很强调面向接口编程，因此接口应该相对保持稳定，接口一改，需要修改的地方就太多了，频繁修改接口绝对不是个好主意。所以改造如下：
+
+>首先定义一套通用的调用框架，用一个通用的请求对象来封装请求传递的参数；
+>然后定义一个通用的调用方法，这个方法不去区分具体业务，所有的业务都是这一个方法，在通用的请求对象里面会有一个业务的标记进行业务区分；
+>到了职责对象里面，愿意处理就跟原来一样的处理方式，如果不愿意处理，就传递到下一个处理对象就好了。
+>对于返回值也可以来个通用的，最简单的就是使用Object类型。
+
+##### 具体代码
+
+1. 通用的请求对象的定义
+
+```Java 
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 通用的请求对象
+ */
+public class RequestModel {
+    /**
+     * 表示具体的业务类型
+     */
+    private String type;
+
+    /**
+     * 通过构造方法把具体的业务类型传递进来
+     *
+     * @param type 具体的业务类型
+     */
+    public RequestModel(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+}
+```
+
+2. 此时的通用职责处理对象，在这里要实现一个通用的调用框架
+
+```Java 
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 通用职责处理对象，在这里要实现一个通用的调用框架
+ */
+public abstract class Handler {
+    /**
+     * 持有下一个处理请求的对象
+     */
+    protected Handler successor = null;
+
+    /**
+     * 设置下一个处理请求的对象
+     *
+     * @param successor 下一个处理请求的对象
+     */
+    public void setSuccessor(Handler successor) {
+        this.successor = successor;
+    }
+
+    /**
+     * 通用的请求处理方法
+     *
+     * @param rm 通用的请求对象
+     * @return 处理后需要返回的对象
+     */
+    public Object handleRequest(RequestModel rm) {
+        if (successor != null) {
+            //这个是默认的实现，如果子类不愿意处理这个请求，
+            //那就传递到下一个职责对象去处理
+            return this.successor.handleRequest(rm);
+        } else {
+            System.out.println("没有后续处理或者暂时不支持这样的功能处理");
+            return false;
+        }
+    }
+}
+```
+
+3. 现在来加上第一个业务，就是“聚餐费用申请”的处理，为了描述具体的业务数据，需要扩展通用的请求对象，把业务数据封装进去，另外定义一个请求对象
+
+```Java 
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 具体的业务请求对象--聚餐费用申请
+ */
+public class FeeRequestModel extends RequestModel {
+    /**
+     * 约定具体的业务类型
+     */
+    public final static String FEE_TYPE = "fee";
+
+    public FeeRequestModel() {
+        super(FEE_TYPE);
+    }
+
+    /**
+     * 申请人
+     */
+    private String user;
+    /**
+     * 申请金额
+     */
+    private double fee;
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public double getFee() {
+        return fee;
+    }
+
+    public void setFee(double fee) {
+        this.fee = fee;
+    }
+}
+```
+
+4. 接下来该实现职责对象的处理了，首先要覆盖父类的通用业务处理方法，然后在里面处理自己想要实现的业务，不想处理的就让父类去处理，父类会默认的传递给下一个处理对象。
+
+**项目经理：**
+
+```Java 
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 具体的职责对象--项目经理
+ */
+public class ProjectManager extends Handler {
+    @Override
+    public Object handleRequest(RequestModel rm) {
+        if (FeeRequestModel.FEE_TYPE.equals(rm.getType())) {
+            //表示聚餐费用申请
+            return handleFeeRequest(rm);
+        } else {
+            //其它的项目经理暂时不想处理
+            return super.handleRequest(rm);
+        }
+    }
+
+    /**
+     * 聚餐费用处理
+     *
+     * @param rm
+     * @return
+     */
+    private Object handleFeeRequest(RequestModel rm) {
+        //先把通用的对象造型回来
+        FeeRequestModel frm = (FeeRequestModel) rm;
+        String str = "";
+        //项目经理的权限比较小，只能在500以内
+        if (frm.getFee() < 500) {
+            //为了测试，简单点，只同意小李的
+            if ("小李".equals(frm.getUser())) {
+                str = "项目经理同意" + frm.getUser() + "聚餐费用" + frm.getFee() + "元的请求";
+            } else {
+                //其它人一律不同意
+                str = "项目经理不同意" + frm.getUser() + "聚餐费用" + frm.getFee() + "元的请求";
+            }
+            return str;
+        } else {
+            //超过500，继续传递给级别更高的人处理
+            if (this.successor != null) {
+                return successor.handleRequest(rm);
+            }
+        }
+        return str;
+    }
+}
+```
+
+**部门经理：**
+
+```Java 
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 部门经理
+ */
+public class DeptManager extends Handler {
+    @Override
+    public Object handleRequest(RequestModel rm) {
+        if (FeeRequestModel.FEE_TYPE.equals(rm.getType())) {
+            //表示聚餐费用申请
+            return handleFeeRequest(rm);
+        } else {
+            //其它的部门经理暂时不想处理
+            return super.handleRequest(rm);
+        }
+    }
+
+    /**
+     * 聚餐费用处理
+     *
+     * @param rm
+     * @return
+     */
+    private Object handleFeeRequest(RequestModel rm) {
+        //先把通用的对象造型回来
+        FeeRequestModel frm = (FeeRequestModel) rm;
+        String str = "";
+        //部门经理的权限只能在1000以内
+        if (frm.getFee() < 1000) {
+            //为了测试，简单点，只同意小李的
+            if ("小李".equals(frm.getUser())) {
+                str = "部门经理同意" + frm.getUser() + "聚餐费用" + frm.getFee() + "元的请求";
+            } else {
+                //其它人一律不同意
+                str = "部门经理不同意" + frm.getUser() + "聚餐费用" + frm.getFee() + "元的请求";
+            }
+            return str;
+        } else {
+            //超过1000，继续传递给级别更高的人处理
+            if (this.successor != null) {
+                return successor.handleRequest(rm);
+            }
+        }
+        return str;
+    }
+}
+```
+
+**总经理：**
+
+```Java 
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 总经理
+ */
+public class GeneralManager extends Handler {
+    @Override
+    public Object handleRequest(RequestModel rm) {
+        if (FeeRequestModel.FEE_TYPE.equals(rm.getType())) {
+            //表示聚餐费用申请
+            return handleFeeRequest(rm);
+        } else {
+            //其它的总经理暂时不想处理
+            return super.handleRequest(rm);
+        }
+    }
+
+    /**
+     * 聚餐费用处理
+     *
+     * @param rm
+     * @return
+     */
+    private Object handleFeeRequest(RequestModel rm) {
+        //先把通用的对象造型回来
+        FeeRequestModel frm = (FeeRequestModel) rm;
+        String str = "";
+        //总经理的权限很大，只要请求到了这里，他都可以处理
+        if (frm.getFee() >= 1000) {
+            //为了测试，简单点，只同意小李的
+            if ("小李".equals(frm.getUser())) {
+                str = "总经理同意" + frm.getUser() + "聚餐费用" + frm.getFee() + "元的请求";
+            } else {
+                //其它人一律不同意
+                str = "总经理不同意" + frm.getUser() + "聚餐费用" + frm.getFee() + "元的请求";
+            }
+            return str;
+        } else {
+            //如果还有后继的处理对象，继续传递
+            if (this.successor != null) {
+                return successor.handleRequest(rm);
+            }
+        }
+        return str;
+    }
+}
+```
+
+5. 对于客户端，唯一的麻烦是需要知道每个业务对应的具体的请求对象，因为要封装业务数据进去.
+
+```Java 
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 客户端调用
+ */
+public class Client {
+    public static void main(String[] args) {
+        //先要组装职责链
+        Handler h1 = new GeneralManager();
+        Handler h2 = new DeptManager();
+        Handler h3 = new ProjectManager();
+        h3.setSuccessor(h2);
+        h2.setSuccessor(h1);
+
+        //开始测试申请聚餐费用
+        FeeRequestModel frm = new FeeRequestModel();
+        frm.setFee(300);
+        frm.setUser("小李");
+        //调用处理
+        String ret1 = (String) h3.handleRequest(frm);
+        System.out.println("ret1=" + ret1);
+
+        //重新设置申请金额，再调用处理
+        frm.setFee(800);
+        h3.handleRequest(frm);
+        String ret2 = (String) h3.handleRequest(frm);
+        System.out.println("ret2=" + ret2);
+
+        //重新设置申请金额，再调用处理
+        frm.setFee(1600);
+        h3.handleRequest(frm);
+        String ret3 = (String) h3.handleRequest(frm);
+        System.out.println("ret3=" + ret3);
+    }
+}
+```
+6. 接下来看看如何在不改动现有的框架的前提下，扩展新的业务，这样才能说明这种设计的灵活性。
+
+假如就是要实现上面示例过的另外一个功能“预支差旅费申请”。要想扩展新的业务，第一步就是新建一个封装业务数据的对象
+
+```Java 
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 预支差旅费用请求对象
+ */
+public class PreFeeRequestModel extends RequestModel {
+    /**
+     * 约定具体的业务类型
+     */
+    public final static String FEE_TYPE = "preFee";
+
+    public PreFeeRequestModel() {
+        super(FEE_TYPE);
+    }
+
+    /**
+     * 申请人
+     */
+    private String user;
+    /**
+     * 申请金额
+     */
+    private double fee;
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public double getFee() {
+        return fee;
+    }
+
+    public void setFee(double fee) {
+        this.fee = fee;
+    }
+}
+```
+
+7. 对于具体进行职责处理的类，比较好的方式就是扩展出子类来，然后在子类里面实现新加入的业务，当然也可以直接在原来的对象上改。这里采用扩展出子类的方式。
+
+```Java
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 实现为项目经理增加预支差旅费用申请处理的功能的子对象，
+ * 现在的项目经理既可以处理聚餐费用申请，又可以处理预支差旅费用申请
+ */
+public class ProjectManager2 extends ProjectManager {
+    @Override
+    public Object handleRequest(RequestModel rm) {
+        if (PreFeeRequestModel.FEE_TYPE.equals(rm.getType())) {
+            //表示预支差旅费用申请
+            return handlePreFeeRequest(rm);
+        } else {
+            //其它的让父类去处理
+            return super.handleRequest(rm);
+        }
+    }
+
+    /**
+     * 预支差旅费用
+     *
+     * @param rm
+     * @return
+     */
+    private Object handlePreFeeRequest(RequestModel rm) {
+        //先把通用的对象造型回来
+        PreFeeRequestModel frm = (PreFeeRequestModel) rm;
+        //项目经理的权限比较小，只能在5000以内
+        if (frm.getFee() < 5000) {
+            //工作需要嘛，统统同意
+            System.out.println("项目经理同意" + frm.getUser() + "预支差旅费用" + frm.getFee() + "元的请求");
+            return true;
+        } else {
+            //超过5000，继续传递给级别更高的人处理
+            if (this.successor != null) {
+                return this.successor.handleRequest(rm);
+            }
+        }
+        return false;
+    }
+}
+```
+
+```Java
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 实现为部门经理增加预支差旅费用申请处理的功能的子对象，
+ * 现在的部门经理既可以处理聚餐费用申请，又可以处理预支差旅费用申请
+ */
+public class DeptManager2 extends ProjectManager {
+    @Override
+    public Object handleRequest(RequestModel rm) {
+        if (PreFeeRequestModel.FEE_TYPE.equals(rm.getType())) {
+            //表示预支差旅费用申请
+            return handlePreFeeRequest(rm);
+        } else {
+            //其它的让父类去处理
+            return super.handleRequest(rm);
+        }
+    }
+
+    /**
+     * 预支差旅费用
+     *
+     * @param rm
+     * @return
+     */
+    private Object handlePreFeeRequest(RequestModel rm) {
+        //先把通用的对象造型回来
+        PreFeeRequestModel frm = (PreFeeRequestModel) rm;
+        //部门经理的权限在20000以内
+        if (frm.getFee() < 20000) {
+            //工作需要嘛，统统同意
+            System.out.println("部门经理同意" + frm.getUser() + "预支差旅费用" + frm.getFee() + "元的请求");
+            return true;
+        } else {
+            //超过20000，继续传递给级别更高的人处理
+            if (this.successor != null) {
+                return this.successor.handleRequest(rm);
+            }
+        }
+        return false;
+    }
+}
+```
+
+```Java
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 实现为总经理增加预支差旅费用申请处理的功能的子对象，
+ * 现在的总经理既可以处理聚餐费用申请，又可以处理预支差旅费用申请
+ */
+public class GeneralManager2 extends ProjectManager {
+    @Override
+    public Object handleRequest(RequestModel rm) {
+        if (PreFeeRequestModel.FEE_TYPE.equals(rm.getType())) {
+            //表示预支差旅费用申请
+            return handlePreFeeRequest(rm);
+        } else {
+            //其它的让父类去处理
+            return super.handleRequest(rm);
+        }
+    }
+
+    /**
+     * 预支差旅费用
+     *
+     * @param rm
+     * @return
+     */
+    private Object handlePreFeeRequest(RequestModel rm) {
+        //先把通用的对象造型回来
+        PreFeeRequestModel frm = (PreFeeRequestModel) rm;
+        //总经理的权限在20000以内
+        if (frm.getFee() >= 20000) {
+            //工作需要嘛，统统同意
+            System.out.println("总经理同意" + frm.getUser() + "预支差旅费用" + frm.getFee() + "元的请求");
+            return true;
+        } else {
+            //如果还有后续，继续传递给级别更高的人处理
+            if (this.successor != null) {
+                return this.successor.handleRequest(rm);
+            }
+        }
+        return false;
+    }
+}
+```
+
+8. 此时的测试类
+
+```Java 
+package main.java.com.study.designPatterns.chain.demoTwo.upgrade;
+
+/**
+ * @author: whb
+ * @description: 拓展后的测试类
+ */
+public class Client2 {
+    public static void main(String[] args) {
+        //先要组装职责链
+        Handler h1 = new GeneralManager2();
+        Handler h2 = new DeptManager2();
+        Handler h3 = new ProjectManager2();
+        h3.setSuccessor(h2);
+        h2.setSuccessor(h1);
+
+        //开始测试申请聚餐费用
+        FeeRequestModel frm = new FeeRequestModel();
+        frm.setFee(300);
+        frm.setUser("小李");
+        //调用处理
+        String ret1 = (String) h3.handleRequest(frm);
+        System.out.println("ret1=" + ret1);
+
+        //重新设置申请金额，再调用处理
+        frm.setFee(800);
+        h3.handleRequest(frm);
+        String ret2 = (String) h3.handleRequest(frm);
+        System.out.println("ret2=" + ret2);
+
+        //重新设置申请金额，再调用处理
+        frm.setFee(1600);
+        h3.handleRequest(frm);
+        String ret3 = (String) h3.handleRequest(frm);
+        System.out.println("ret3=" + ret3);
+
+        //开始测试申请预支差旅费用
+        PreFeeRequestModel pfrm = new PreFeeRequestModel();
+        pfrm.setFee(3000);
+        pfrm.setUser("小张");
+        //调用处理
+        h3.handleRequest(pfrm);
+        //重新设置申请金额，再调用处理
+        pfrm.setFee(6000);
+        h3.handleRequest(pfrm);
+        //重新设置申请金额，再调用处理
+        pfrm.setFee(36000);
+        h3.handleRequest(pfrm);
+    }
+}
+```
+#### 总结
+
+这种设计方式的好处，相当的通用和灵活，有了新业务，只需要添加实现新功能的对象就可以了，但是带来的缺陷就是可能会造成对象层次过多，或者出现较多的细粒度的对象，极端情况下，每次就扩展一个方法，会出现大量只处理一个功能的细粒度对象。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
