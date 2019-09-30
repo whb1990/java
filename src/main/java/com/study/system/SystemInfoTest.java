@@ -1,5 +1,7 @@
 package main.java.com.study.system;
 
+import java.io.File;
+
 /**
  * @author: whb
  * @date: 2019/9/30 17:05
@@ -27,9 +29,11 @@ public class SystemInfoTest {
         System.out.println("用户的账户名称:" + System.getProperty("user.name"));
         System.out.println("用户的主目录:" + System.getProperty("user.home"));
         System.out.println("用户的当前工作目录:" + System.getProperty("user.dir"));
+        String workspace = System.getProperty("user.dir");
+        System.out.println("用户的当前工作目录的根目录:" + workspace.substring(0, workspace.indexOf(":")) + ":" + System.getProperty("file.separator"));
         System.out.println("当前的classpath的绝对路径的URI表示法:" + Thread.currentThread().getContextClassLoader().getResource(""));
         System.out.println("得到的是当前的classpath的绝对URI路径:" + SystemInfoTest.class.getResource("/"));
-        System.out.println("得到的是当前类Tfff.class文件的URI目录:" + SystemInfoTest.class.getResource(""));
+        System.out.println("得到的是当前类SystemInfoTest.class文件的URI目录:" + SystemInfoTest.class.getResource(""));
 
     }
 }
