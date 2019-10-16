@@ -19,10 +19,8 @@ import java.util.Comparator;
  * Output: 2
  * 解析: 你需要删除两组 [1,2] 以使其余间隔不重叠。
  * Input: [ [1,2], [2,3] ]
- * <p>
  * Output: 0
- * <p>
- * Explanation: Y不需要删除任何区间，因为它们已经不重叠了。
+ * 解析: 你不需要删除任何区间，因为它们已经不重叠了。
  */
 public class NonOverlappingIntervals {
     public static int eraseOverlapIntervals(int[][] intervals) {
