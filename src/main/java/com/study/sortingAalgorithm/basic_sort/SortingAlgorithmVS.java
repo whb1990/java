@@ -1,4 +1,4 @@
-package main.java.com.study.sortingAalgorithm;
+package main.java.com.study.sortingAalgorithm.basic_sort;
 
 /**
  * @author: whb
