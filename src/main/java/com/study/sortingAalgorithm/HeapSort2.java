@@ -2,8 +2,6 @@ package main.java.com.study.sortingAalgorithm;
 
 import main.java.com.study.utils.CommonUtils;
 
-import java.util.Arrays;
-
 /**
  * @author: whb
  * @date: 2020/3/2 11:01
@@ -36,14 +34,14 @@ public class HeapSort2 {
     /**
      * 调整堆
      *
-     * @param arr 待排序数组
-     * @param i   根节点
-     * @param len 节点数量
+     * @param arr    待排序数组
+     * @param parent 根节点
+     * @param len    节点数量
      */
-    private static void heapify(int[] arr, int i, int len) {
-        int left = 2 * i + 1;
-        int right = 2 * i + 2;
-        int largest = i;
+    private static void heapify(int[] arr, int parent, int len) {
+        int left = 2 * parent + 1;
+        int right = 2 * parent + 2;
+        int largest = parent;
 
         if (left < len && arr[left] > arr[largest]) {
             largest = left;
@@ -53,8 +51,8 @@ public class HeapSort2 {
             largest = right;
         }
 
-        if (largest != i) {
-            swap(arr, i, largest);
+        if (largest != parent) {
+            swap(arr, parent, largest);
             heapify(arr, largest, len);
         }
     }
