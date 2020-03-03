@@ -32,13 +32,35 @@ public class CocktailSort {
         } while (swapped);
     }
 
+    public static void cocktailSort2(int[] unsorted) {
+        int left = 0, right = unsorted.length - 1;
+        while (left < right) {
+            for (int i = left; i < right; i++) {
+                if (unsorted[i] > unsorted[i + 1]) {
+                    unsorted[i] = unsorted[i] ^ unsorted[i + 1];
+                    unsorted[i + 1] = unsorted[i] ^ unsorted[i + 1];
+                    unsorted[i] = unsorted[i] ^ unsorted[i + 1];
+                }
+            }
+            right--;
+            for (int j = right; j > left; j--) {
+                if (unsorted[j] < unsorted[j - 1]) {
+                    unsorted[j] = unsorted[j] + unsorted[j - 1];
+                    unsorted[j - 1] = unsorted[j] - unsorted[j - 1];
+                    unsorted[j] = unsorted[j] - unsorted[j - 1];
+                }
+            }
+            left++;
+        }
+    }
+
     public static void main(String[] args) {
         int[] unsorted = {6, 2, 4, 1, 5, 9};
         System.out.println("**************鸡尾酒排序******************");
         System.out.println("排序前：");
         CommonUtils.display(unsorted);
         System.out.println("排序后：");
-        cocktailSort(unsorted);
+        cocktailSort2(unsorted);
         CommonUtils.display(unsorted);
     }
 }
