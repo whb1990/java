@@ -51,6 +51,9 @@ public class BucketSort2 {
         int arrIndex = 0;
         //遍历桶并输出元素
         for (int[] bucket : buckets) {
+            if (bucket.length == 0) {
+                continue;
+            }
             //对每个桶单独排序
             InsertSort.insertSort(bucket);
             for (int value : bucket) {
