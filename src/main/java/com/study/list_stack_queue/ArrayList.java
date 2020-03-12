@@ -153,4 +153,18 @@ public class ArrayList<E> {
         res.append("]");
         return res.toString();
     }
+
+    public static void main(String[] args) {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        arrayList.addFirst(1);
+        arrayList.addFirst(2);
+        arrayList.addFirst(3);
+        arrayList.addFirst(4);
+        arrayList.addFirst(5);
+        System.out.println(arrayList.toString());
+        System.out.println(arrayList.removeFirst());
+        System.out.println(arrayList.removeLast());
+        System.out.println(arrayList.getLast());
+        System.out.println(arrayList.toString());
+    }
 }
