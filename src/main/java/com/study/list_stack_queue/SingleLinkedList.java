@@ -5,7 +5,7 @@ package main.java.com.study.list_stack_queue;
  * @date: 2020/3/11 19:34
  * @description: 单链表
  */
-public class SingleList<E> {
+public class SingleLinkedList<E> {
 
     /**
      * 虚拟的头结点
@@ -16,7 +16,7 @@ public class SingleList<E> {
      */
     private int size;
 
-    public SingleList() {
+    public SingleLinkedList() {
         this.dummyHead = new Node();
         this.size = 0;
     }
@@ -132,37 +132,37 @@ public class SingleList<E> {
     }
 
     public static void main(String[] args) {
-        SingleList<Integer> singleList = new SingleList<>();
+        SingleLinkedList<Integer> singleLinkedList = new SingleLinkedList<>();
         for (int i = 0; i < 5; i++) {
-            singleList.addFirst(i);
+            singleLinkedList.addFirst(i);
         }
-        System.out.println(singleList);
+        System.out.println(singleLinkedList);
 
-        singleList.add(2, 666);
-        System.out.println(singleList);
+        singleLinkedList.add(2, 666);
+        System.out.println(singleLinkedList);
 
-        singleList.remove(2);
-        System.out.println(singleList);
+        singleLinkedList.remove(2);
+        System.out.println(singleLinkedList);
 
-        singleList.removeFirst();
-        System.out.println(singleList);
+        singleLinkedList.removeFirst();
+        System.out.println(singleLinkedList);
 
-        singleList.removeLast();
-        System.out.println(singleList);
+        singleLinkedList.removeLast();
+        System.out.println(singleLinkedList);
 
-        singleList.removeElement(2);
-        System.out.println(singleList);
+        singleLinkedList.removeElement(2);
+        System.out.println(singleLinkedList);
 
-        System.out.println(singleList.contains(3));
+        System.out.println(singleLinkedList.contains(3));
 
-        singleList.set(1, 999);
-        System.out.println(singleList);
+        singleLinkedList.set(1, 999);
+        System.out.println(singleLinkedList);
 
-        singleList.addLast(888);
-        System.out.println(singleList);
+        singleLinkedList.addLast(888);
+        System.out.println(singleLinkedList);
 
-        System.out.println(singleList.getFirst() + " " + singleList.getLast());
-        System.out.println(singleList.size());
+        System.out.println(singleLinkedList.getFirst() + " " + singleLinkedList.getLast());
+        System.out.println(singleLinkedList.size());
     }
 
     @Override

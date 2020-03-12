@@ -5,7 +5,7 @@ package main.java.com.study.list_stack_queue;
  * @date: 2020/3/12 14:31
  * @description: 双向链表
  */
-public class DoubleList<E> {
+public class DoubleLinkedList<E> {
 
     /**
      * 虚拟头结点
@@ -17,7 +17,7 @@ public class DoubleList<E> {
      */
     private int size;
 
-    public DoubleList() {
+    public DoubleLinkedList() {
         this.dummyHead = new Node();
         this.size = 0;
     }
@@ -137,7 +137,7 @@ public class DoubleList<E> {
     }
 
     public static void main(String[] args) {
-        DoubleList<Integer> dulList = new DoubleList<>();
+        DoubleLinkedList<Integer> dulList = new DoubleLinkedList<>();
         for (int i = 0; i < 5; i++) {
             dulList.addLast(i);
         }
