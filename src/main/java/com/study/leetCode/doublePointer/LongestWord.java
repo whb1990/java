@@ -6,12 +6,27 @@ import java.util.List;
 /**
  * @author: whb
  * @date: 2019/10/14 18:17
- * @description: 最长子序列
- * Input:
+ * @description: LeetCode-524-最长子序列
+ * 题目描述：给定一个字符串和一个字符串字典，找到字典里面最长的字符串，该字符串可以通过删除给定字符串的某些字符来得到。如果答案不止一个，返回长度最长且字典顺序最小的字符串。如果答案不存在，则返回空字符串。
+ * 示例 1:
+ * <p>
+ * 输入:
  * s = "abpcplea", d = ["ale","apple","monkey","plea"]
- * Output:
+ * <p>
+ * 输出:
  * "apple"
- * 题目描述：删除s中一些字符，使得它构成字符串列表d中的一个字符串，找出能构成的最长字符串。如果有多个相同长度的结果，返回字典序中最小的字符串。
+ * 示例 2:
+ * <p>
+ * 输入:
+ * s = "abpcplea", d = ["a","b","c"]
+ * <p>
+ * 输出:
+ * "a"
+ * 说明:
+ * <p>
+ * 所有输入的字符串只包含小写字母。
+ * 字典的大小不会超过 1000。
+ * 所有输入的字符串长度不会超过 1000。
  * 解题思路：通过删除字符串s中的一些字符得到字符串t，可以认为t是s的子序列，可以使用双指针来判断一个字符串是否为另一个字符串的子序列。
  */
 public class LongestWord {
@@ -41,6 +56,28 @@ public class LongestWord {
         return j == target.length();
     }
 
+    public static String findLongestWord2(String s, List<String> d) {
+        String result = "";
+        for (String str : d) {
+            if (result.length() > str.length() || (result.length() == str.length() && result.compareTo(str) < 0)) {
+                continue;
+            }
+            int i = 0, j = 0;
+            while (i < str.length() && j < s.length()) {
+                if (s.charAt(j) == str.charAt(i)) {
+                    i++;
+                    j++;
+                } else {
+                    j++;
+                }
+            }
+            if (i == str.length()) {
+                result = str;
+            }
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
         String s = "abpcplea";
         List<String> d = new ArrayList<>();
@@ -49,7 +86,7 @@ public class LongestWord {
         d.add("monkey");
         d.add("plea");
         d.add("bpplad");
-        System.out.println(findLongestWord(s, d));
+        System.out.println(findLongestWord2(s, d));
     }
 
 }
