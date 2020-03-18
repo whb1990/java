@@ -6,8 +6,19 @@ import java.util.PriorityQueue;
 /**
  * @author: whb
  * @date: 2019/10/14 18:38
- * @description: 求解数组中第K个的元素
- * 题目描述：找到倒数第K个元素
+ * @description: LeetCode-215-求解数组中第K大的元素
+ * 在未排序的数组中找到第 k 个最大的元素。请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
+ * 示例 1:
+ * <p>
+ * 输入: [3,2,1,5,6,4] 和 k = 2
+ * 输出: 5
+ * 示例 2:
+ * <p>
+ * 输入: [3,2,3,1,2,4,5,5,6] 和 k = 4
+ * 输出: 4
+ * 说明:
+ * <p>
+ * 你可以假设 k 总是有效的，且 1 ≤ k ≤ 数组的长度。
  */
 public class KthElement {
     /**
@@ -65,6 +76,14 @@ public class KthElement {
         return nums[k];
     }
 
+    /**
+     * 查找快速排序的基准点
+     *
+     * @param a
+     * @param l
+     * @param h
+     * @return
+     */
     private static int partition(int[] a, int l, int h) {
         int i = l, j = h + 1;
         while (true) {
@@ -84,9 +103,47 @@ public class KthElement {
     }
 
     private static void swap(int[] a, int i, int j) {
-        int t = a[i];
-        a[i] = a[j];
-        a[j] = t;
+        a[i] = a[i] ^ a[j];
+        a[j] = a[i] ^ a[j];
+        a[i] = a[i] ^ a[j];
+    }
+
+    /**
+     * 另一种构建堆的方式
+     *
+     * @param nums
+     * @param k
+     * @return
+     */
+    public static int findKthLargest(int[] nums, int k) {
+        if (nums == null || nums.length < 1 || k < 1) {
+            return 0;
+        }
+        int len = nums.length;
+        for (int i = (int) Math.floor(len / 2); i >= 0; i--) {
+            heapify(nums, i, len);
+        }
+        for (int i = len - 1; i > 0; i--) {
+            swap(nums, 0, i);
+            heapify(nums, 0, i);
+        }
+        return nums[k - 1];
+    }
+
+    private static void heapify(int[] arr, int parent, int len) {
+        int left = 2 * parent + 1;
+        int right = 2 * parent + 2;
+        int smallest = parent;
+        if (left < len && arr[left] < arr[smallest]) {
+            smallest = left;
+        }
+        if (right < len && arr[right] < arr[smallest]) {
+            smallest = right;
+        }
+        if (smallest != parent) {
+            swap(arr, parent, smallest);
+            heapify(arr, smallest, len);
+        }
     }
 
     public static void main(String[] args) {
