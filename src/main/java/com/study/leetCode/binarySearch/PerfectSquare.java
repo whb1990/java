@@ -1,4 +1,4 @@
-package main.java.com.study.leetCode;
+package main.java.com.study.leetCode.binarySearch;
 
 /**
  * @author: whb
@@ -17,7 +17,7 @@ package main.java.com.study.leetCode;
  * 输入：14
  * 输出：False
  */
-public class leetCode367 {
+public class PerfectSquare {
     /**
      * 解法一：利用 1+3+5+7+9+…+(2n-1)=n^2，即完全平方数肯定是前n个连续奇数的和
      *

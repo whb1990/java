@@ -1,9 +1,9 @@
-package main.java.com.study.leetCode;
+package main.java.com.study.leetCode.binarySearch;
 
 /**
  * @author: whb
  * @date: 2020/3/10 18:40
- * @description: x的平方根
+ * @description: LeetCode-69-x的平方根
  * 实现 int sqrt(int x) 函数。
  * <p>
  * 计算并返回 x 的平方根，其中 x 是非负整数。
@@ -21,7 +21,7 @@ package main.java.com.study.leetCode;
  * 说明: 8 的平方根是 2.82842...,
  *      由于返回类型是整数，小数部分将被舍去。
  */
-public class leetCode69 {
+public class MySqrt {
 
     /**
      * 二分查找，用x/m<m而不是m*m>x防止溢出
@@ -29,7 +29,7 @@ public class leetCode69 {
      * @param x
      * @return
      */
-    public int mySqrt(int x) {
+    public static int mySqrt(int x) {
         if (x == 1) {
             return 1;
         }
@@ -44,5 +44,9 @@ public class leetCode69 {
             }
         }
         return min;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(mySqrt(8));
     }
 }
