@@ -48,10 +48,9 @@ public class ReverseVowelsString {
                 reuslt[right] = charArr[left];
                 left++;
                 right--;
-            } else if (!vowels.contains(charArr[left])) {
+            } else {
                 reuslt[left] = charArr[left];
                 left++;
-            } else if (!vowels.contains(charArr[right])) {
                 reuslt[right] = charArr[right];
                 right--;
             }
