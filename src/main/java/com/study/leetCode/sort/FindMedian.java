@@ -1,4 +1,4 @@
-package main.java.com.study.sortingAalgorithm.basic_sort;
+package main.java.com.study.leetCode.sort;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
