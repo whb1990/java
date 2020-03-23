@@ -57,12 +57,12 @@ public class FindMin {
                 low = middle + 1;
             }
         }
-        return nums[0];
+        return nums[low];
     }
 
     public static void main(String[] args) {
         //int[] nums = new int[]{4, 5, 6, 7, 0, 1, 2};
         int[] nums = new int[]{3, 4, 5, 1, 2};
-        System.out.println(findMin(nums));
+        System.out.println(findMin2(nums));
     }
 }
