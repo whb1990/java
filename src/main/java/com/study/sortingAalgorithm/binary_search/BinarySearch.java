@@ -124,7 +124,7 @@ public class BinarySearch {
                 left = middle + 1;
             }
         }
-        if (left < arr.length && arr[middle] == key) {
+        if (left < arr.length && arr[left] == key) {
             return left;
         }
         return -1;
