@@ -86,9 +86,12 @@ public class LoopQueue<E> {
         StringBuilder res = new StringBuilder();
         res.append(String.format("Queue: size = %d , capacity = %d\n", size, getCapacity()));
         res.append("front [");
-        for (int i = front; i != tail; i = (i + 1) % data.length) { //实现方式二
+        //实现方式二
+        for (int i = front; i != tail; i = (i + 1) % data.length) {
             res.append(data[i]);
-            if ((i + 1) % data.length != tail) res.append(", ");
+            if ((i + 1) % data.length != tail) {
+                res.append(", ");
+            }
         }
         res.append("] tail");
         return res.toString();

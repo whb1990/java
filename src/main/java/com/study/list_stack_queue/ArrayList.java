@@ -61,8 +61,8 @@ public class ArrayList<E> {
         E[] newData = (E[]) new Object[newCapacity];
         for (int i = 0; i < size; i++) {
             newData[i] = data[i];
-            data = newData;
         }
+        data = newData;
     }
 
     public void addLast(E e) {
@@ -132,11 +132,12 @@ public class ArrayList<E> {
         return remove(size - 1);
     }
 
-    public void removeElement(E e) {
+    public E removeElement(E e) {
         int index = find(e);
         if (index != -1) {
-            remove(index);
+            return remove(index);
         }
+        return null;
     }
 
     @Override
