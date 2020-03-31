@@ -66,13 +66,12 @@ public class LongestWord {
             while (i < str.length() && j < s.length()) {
                 if (s.charAt(j) == str.charAt(i)) {
                     i++;
-                    j++;
-                } else {
-                    j++;
                 }
-            }
-            if (i == str.length()) {
-                result = str;
+                j++;
+                if (i == str.length()) {
+                    result = str;
+                    break;
+                }
             }
         }
         return result;

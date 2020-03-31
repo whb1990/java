@@ -21,45 +21,25 @@ public class ReverseVowelsString {
     private static final HashSet<Character> vowels = new HashSet<>(Arrays.asList('a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'));
 
     public static String reverseVowels(String str) {
-        int i = 0, j = str.length() - 1;
+        char[] charArr = str.toCharArray();
         char[] result = new char[str.length()];
-        while (i <= j) {
-            char ci = str.charAt(i);
-            char cj = str.charAt(j);
-            if (!vowels.contains(ci)) {
-                result[i++] = ci;
-            } else if (!vowels.contains(cj)) {
-                result[j--] = cj;
+        int left = 0, right = str.length() - 1;
+        while (left <= right) {
+            if (vowels.contains(charArr[left]) && vowels.contains(charArr[right])) {
+                result[left] = charArr[right];
+                result[right] = charArr[left];
+                left++;
+                right--;
             } else {
-                result[i++] = cj;
-                result[j--] = ci;
+                result[left] = charArr[left++];
+                result[right] = charArr[right--];
             }
         }
         return new String(result);
     }
 
-    public static String reverseVowels2(String str) {
-        char[] charArr = str.toCharArray();
-        char[] reuslt = new char[str.length()];
-        int left = 0, right = str.length() - 1;
-        while (left <= right) {
-            if (vowels.contains(charArr[left]) && vowels.contains(charArr[right])) {
-                reuslt[left] = charArr[right];
-                reuslt[right] = charArr[left];
-                left++;
-                right--;
-            } else {
-                reuslt[left] = charArr[left];
-                left++;
-                reuslt[right] = charArr[right];
-                right--;
-            }
-        }
-        return new String(reuslt);
-    }
-
     public static void main(String[] args) {
-        System.out.println(reverseVowels2("leetcode"));
+        System.out.println(reverseVowels("leetcode"));
     }
 
 }
