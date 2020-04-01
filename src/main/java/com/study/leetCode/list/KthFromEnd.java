@@ -13,6 +13,13 @@ package main.java.com.study.leetCode.list;
  * 返回链表 4->5.
  */
 public class KthFromEnd {
+    /**
+     * 简洁版
+     *
+     * @param head
+     * @param k
+     * @return
+     */
     public ListNode getKthFromEnd(ListNode head, int k) {
         ListNode fast = head;
         while (k-- > 0) {
@@ -27,6 +34,36 @@ public class KthFromEnd {
             fast = fast.next;
         }
         slow = slow.next;
+        return slow;
+    }
+
+    /**
+     * 完善版
+     *
+     * @param head
+     * @param k
+     * @return
+     */
+    public ListNode getKthFromEnd2(ListNode head, int k) {
+        if (k < 0) {
+            return null;
+        }
+        //定义快指针
+        ListNode fast = head;
+        int i = k;
+        for (; i > 0 && fast != null; i--) {
+            fast = fast.next;
+        }
+        //说明链表长度小于k
+        if (i > 0) {
+            return null;
+        }
+        //定义慢指针
+        ListNode slow = head;
+        while (fast != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
         return slow;
     }
 }
