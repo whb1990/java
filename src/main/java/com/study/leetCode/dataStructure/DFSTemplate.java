@@ -1,7 +1,5 @@
 package main.java.com.study.leetCode.dataStructure;
 
-import main.java.com.study.dataStructure.stack.Node;
-
 import java.util.Set;
 import java.util.Stack;
 
@@ -20,7 +18,7 @@ public class DFSTemplate {
      * @param visited
      * @return
      */
-    boolean DFS(Node cur, Node target, Set<Node> visited) {
+    boolean DFS(CloneGraph.Node cur, CloneGraph.Node target, Set<CloneGraph.Node> visited) {
         //return true if cur is target;
         //for (next : each neighbor of cur) {
         //if (next is not in visited) {
@@ -39,8 +37,8 @@ public class DFSTemplate {
      * @return
      */
     boolean DFS2(int root, int target) {
-        Set<Node> visited;
-        Stack<Node> s = new Stack<>();
+        Set<CloneGraph.Node> visited;
+        Stack<CloneGraph.Node> s = new Stack<>();
         // add root to s
         while (!s.isEmpty()) {
             //Node cur = the top element in s;

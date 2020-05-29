@@ -1,6 +1,5 @@
 package main.java.com.study.leetCode.dataStructure;
 
-import main.java.com.study.dataStructure.stack.Node;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -20,9 +19,9 @@ public class BFSTemplate {
      * @param target
      * @return
      */
-    int BFS(Node root, Node target) {
+    int BFS(CloneGraph.Node root, CloneGraph.Node target) {
         // store all nodes which are waiting to be processed
-        Queue<Node> queue = new LinkedList<>();
+        Queue<CloneGraph.Node> queue = new LinkedList<>();
         // number of steps neeeded from root to current node
         int step = 0;
         // initialize
@@ -52,11 +51,11 @@ public class BFSTemplate {
      * @param target
      * @return
      */
-    int BFS2(Node root, Node target) {
+    int BFS2(CloneGraph.Node root, CloneGraph.Node target) {
         // store all nodes which are waiting to be processed
-        Queue<Node> queue = new LinkedList<>();
+        Queue<CloneGraph.Node> queue = new LinkedList<>();
         // store all the used nodes
-        Set<Node> used;
+        Set<CloneGraph.Node> used;
         // number of steps neeeded from root to current node
         int step = 0;
         // initialize
