@@ -23,10 +23,12 @@ package main.java.com.study.leetCode.binarySearch;
  */
 public class FindMin {
     public static int findMin(int[] nums) {
-        if (nums.length == 1) {
+        int low = 0, high = nums.length - 1;
+        //数组只有一个元素
+        if (low == high) {
             return nums[0];
         }
-        int low = 0, high = nums.length - 1;
+        //说明未发生旋转
         if (nums[high] > nums[low]) {
             return nums[low];
         }
@@ -42,7 +44,7 @@ public class FindMin {
     }
 
     /**
-     * 这个方法就是上面的改进，上了很多判断
+     * 这个方法就是上面的改进，少了很多判断
      *
      * @param nums
      * @return
