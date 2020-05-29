@@ -86,6 +86,37 @@ public class CloneGraph {
         return clone;
     }
 
+    /**
+     * DFS解法
+     * 对于深度遍历来说，依旧需要一个map保存已经创建过的node节点。每一层需要先判断map中是否已经有这个node，
+     * 有的话就可以直接返回这个node的clone节点，不然需要创建clone节点返回。DFS用到递归，这里递归的结束条件
+     * 应该就是每个节点的neighbors列表遍历完毕，所以当完成遍历neighbors就返回，返回值就是复制的node节点。
+     *
+     * @param node
+     * @return
+     */
+    Map<Node, Node> nodeMap = new HashMap<>();
+
+    public Node cloneGraphDFS(Node node) {
+        if (node == null) {
+            return null;
+        }
+        return dfs(node);
+    }
+
+    private Node dfs(Node node) {
+        if (nodeMap.containsKey(node)) {
+            return nodeMap.get(node);
+        }
+        Node clone = new Node(node.val, new ArrayList<>());
+        nodeMap.put(node, clone);
+        for (Node n : node.neighbors) {
+            Node tmp = dfs(n);
+            clone.neighbors.add(tmp);
+        }
+        return clone;
+    }
+
     class Node {
         public int val;
         public List<Node> neighbors;
