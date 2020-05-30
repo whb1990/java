@@ -9,6 +9,11 @@ import java.util.Set;
  * @author: whb
  * @date: 2020/5/28 17:56
  * @description: 广度优先搜索模版
+ * 广度遍历：
+ * 第一步：设置队列，添加初始节点；
+ * 第二步：判断队列是否为空；
+ * 第三步：迭代操作 弹出队列元素，进行逻辑处理 当前队列元素的下级元素，入队；
+ * 第四步：在此执行步骤三。
  */
 public class BFSTemplate {
     /**

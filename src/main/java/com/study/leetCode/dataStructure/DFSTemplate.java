@@ -7,6 +7,11 @@ import java.util.Stack;
  * @author: whb
  * @date: 2020/5/29 11:24
  * @description: 深度优先搜索模版
+ * 深度遍历：
+ * 第一步：明确递归参数；
+ * 第二步：明确递归终止条件；
+ * 第三步：明确递归函数中的内容；
+ * 第四步：明确回溯返回值。
  */
 public class DFSTemplate {
     /**
