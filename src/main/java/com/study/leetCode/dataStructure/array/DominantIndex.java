@@ -47,6 +47,28 @@ public class DominantIndex {
         return maxIndex;
     }
 
+    /**
+     * 解法二：求出最大值和第二大值，判断最大值是否是第二大值的两倍以上就可以
+     *
+     * @param nums
+     * @return
+     */
+    public static int dominantIndex2(int[] nums) {
+        int max = 0, secondMax = 0, maxIndex = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (max < nums[i]) {
+                //最大值小于当前值，则将最大值赋值给第二大值，当前值赋值给最大值，记录最大值的下标
+                secondMax = max;
+                max = nums[i];
+                maxIndex = i;
+            } else if (secondMax < nums[i]) {
+                //当前值比第二大值大，则更新第二大值
+                secondMax = nums[i];
+            }
+        }
+        return max < 2 * secondMax ? -1 : maxIndex;
+    }
+
     public static void main(String[] args) {
         System.out.println(dominantIndex(new int[]{0, 0, 1, 0}));
     }
