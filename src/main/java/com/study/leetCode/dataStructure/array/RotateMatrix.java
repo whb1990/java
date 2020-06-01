@@ -8,8 +8,6 @@ package main.java.com.study.leetCode.dataStructure.array;
  * <p>
  * 不占用额外内存空间能否做到？
  * <p>
- * <p>
- * <p>
  * 示例 1:
  * <p>
  * 给定 matrix =
@@ -60,6 +58,32 @@ public class RotateMatrix {
         for (int i = 0; i < N; ++i) {
             for (int j = 0; j < N; ++j) {
                 matrix[j][N - 1 - i] = copy[i][j];
+            }
+        }
+    }
+
+    /**
+     * 二次旋转
+     *
+     * @param matrix
+     */
+    public void rotate2(int[][] matrix) {
+        int len = matrix.length;
+        int[][] result = new int[len][len];
+        //第一次旋转
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < len; j++) {
+                result[i][j] = matrix[j][i];
+            }
+        }
+        int k = 0;
+        //第二次旋转
+        for (int i = 0; i < len; i++) {
+            for (int j = len - 1; j >= 0; j--) {
+                matrix[i][k++] = result[i][j];
+                if (k == len) {
+                    k = 0;
+                }
             }
         }
     }
