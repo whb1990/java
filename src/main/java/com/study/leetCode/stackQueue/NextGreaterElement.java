@@ -2,6 +2,7 @@ package main.java.com.study.leetCode.stackQueue;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -50,33 +51,28 @@ public class NextGreaterElement {
         //数组2的长度
         int len2 = nums2.length;
         //用HashMap存放nums2数组，key为元素，value为比当前元素大的下一元素的索引
-        HashMap<Integer, Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
         //临时数组，用于记录nums2中元素的下一个比它大的元素距它的距离
         int[] tmpArr = new int[nums2.length];
         //最后一个元素不存在从当前位置往后比它大的
         tmpArr[len2 - 1] = 0;
-        map.put(nums2[len2 - 1], 0);
+        map.put(nums2[len2 - 1], -1);
         //从后向前遍历
         for (int i = len2 - 1; i >= 0; i--) {
             for (int j = i + 1; j < len2; j += tmpArr[j]) {
                 if (nums2[i] < nums2[j]) {
                     tmpArr[i] = j - i;
-                    map.put(nums2[i], j);
+                    map.put(nums2[i], nums2[j]);
                     break;
                 } else if (tmpArr[j] == 0) {
                     tmpArr[i] = 0;
-                    map.put(nums2[i], 0);
+                    map.put(nums2[i], -1);
                     break;
                 }
             }
         }
         for (int i = 0; i < nums1.length; i++) {
-            int index = map.get(nums1[i]);
-            if (index == 0) {
-                result[i] = -1;
-            } else {
-                result[i] = nums2[index];
-            }
+            result[i] = map.get(nums1[i]);
         }
         return result;
     }
