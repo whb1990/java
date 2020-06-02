@@ -3,6 +3,7 @@ package main.java.com.study.leetCode.stackQueue;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * @author: whb
@@ -47,17 +48,15 @@ public class FindContinuousSequence {
                 sum += start;
                 queue.add(start);
             } else if (sum > target) {
-                sum -= queue.removeFirst();
+                sum -= queue.remove();
                 --start;
             } else {
                 int[] tmp = new int[queue.size()];
-                int first = queue.removeFirst();
-                sum -= first;
-                tmp[0] = first;
                 for (int i = 0; i < queue.size(); i++) {
-                    tmp[i + 1] = queue.get(i);
+                    tmp[i] = queue.get(i);
                 }
                 result.add(tmp);
+                sum -= queue.removeFirst();
                 --start;
             }
         }
