@@ -59,6 +59,7 @@ public class DoubleCircularLinkedList<E> {
         Node insertNode = new Node(e);
         if (index == size) {
             add(e);
+            return;
         }
         Node prev = dummyHead;
         for (int i = 0; i < index; i++) {
