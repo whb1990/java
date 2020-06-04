@@ -38,8 +38,33 @@ public class ReverseVowelsString {
         return new String(result);
     }
 
+    /**
+     * 上面解法的优化
+     *
+     * @param str
+     * @return
+     */
+    public static String reverseVowelsString(String str) {
+        char[] charArr = str.toCharArray();
+        int left = 0, right = charArr.length - 1;
+        while (left < right) {
+            if (vowels.contains(charArr[left]) && vowels.contains(charArr[right])) {
+                char tmp = charArr[left];
+                charArr[left] = charArr[right];
+                charArr[right] = tmp;
+                left++;
+                right--;
+            } else {
+                left++;
+                right--;
+            }
+        }
+        return new String(charArr);
+    }
+
     public static void main(String[] args) {
         System.out.println(reverseVowels("leetcode"));
+        System.out.println(reverseVowelsString("leetcode"));
     }
 
 }
