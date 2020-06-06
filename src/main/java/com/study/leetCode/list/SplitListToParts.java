@@ -41,7 +41,7 @@ package main.java.com.study.leetCode.list;
 public class SplitListToParts {
     /**
      * 创建新列表
-     * 如果链表有 NN 个结点，则分隔的链表中每个部分中都有 n/kn/k 个结点，且前 N\%kN%k 部分有一个额外的结点。我们可以用一个简单的循环来计算 NN。
+     * 如果链表有 N 个结点，则分隔的链表中每个部分中都有 n/k 个结点，且前 N\%k 部分有一个额外的结点。我们可以用一个简单的循环来计算 N。
      * 现在对于每个部分，我们已经计算出该部分有多少个节点：width + (i < remainder ? 1 : 0)。我们创建一个新列表并将该部分写入该列表。
      *
      * @param root
