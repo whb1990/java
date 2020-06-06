@@ -21,10 +21,10 @@ package main.java.com.study.leetCode.list;
 public class ReverseKGroup {
     /**
      * 1、链表分区为已翻转部分+待翻转部分+未翻转部分
-     * 2、每次翻转前，要确定翻转链表的范围，这个必须通过 k 此循环来确定
+     * 2、每次翻转前，要确定翻转链表的范围，这个必须通过 k 次循环来确定
      * 3、需记录翻转链表前驱和后继，方便翻转完成后把已翻转部分和未翻转部分连接起来
      * 4、初始需要两个变量 pre 和 end，pre 代表待翻转链表的前驱，end 代表待翻转链表的末尾
-     * 5、经过k此循环，end 到达末尾，记录待翻转链表的后继 next = end.next
+     * 5、经过k次循环，end 到达末尾，记录待翻转链表的后继 next = end.next
      * 6、翻转链表，然后将三部分链表连接起来，然后重置 pre 和 end 指针，然后进入下一次循环
      * 7、特殊情况，当翻转部分长度不足 k 时，在定位 end 完成后，end==null，已经到达末尾，说明题目已完成，直接返回即可
      *
@@ -36,7 +36,7 @@ public class ReverseKGroup {
         //虚拟头结点
         ListNode dummy = new ListNode(-1);
         dummy.next = head;
-        //定义前驱结点和结束节点
+        //定义待反转链表的前驱结点和尾节点
         ListNode prev = dummy;
         ListNode end = dummy;
         while (end.next != null) {
