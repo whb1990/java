@@ -13,6 +13,7 @@ package main.java.com.study.leetCode.list;
  */
 public class RemoveElements {
     /**
+     * 迭代法
      * 申请一个头结点cur，并使用一个变量dummy指向其初始的位置，cur 和 head同时向前遍历，head总比cur要快一个结点。
      * 当head中结点的值达到要求时（即head.val = val）,使较慢的cur.next直接指向head的下一个结点（当然也可以是null），此时cur不用继续向前，head向前一步后，
      * 通过达到的结点后，cur继续向前。最终返回dummy.next即可。
@@ -34,5 +35,20 @@ public class RemoveElements {
             head = head.next;
         }
         return dummy.next;
+    }
+
+    /**
+     * 递归法
+     *
+     * @param head
+     * @param val
+     * @return
+     */
+    public ListNode removeElements2(ListNode head, int val) {
+        if (head == null) {
+            return null;
+        }
+        head.next = removeElements2(head.next, val);
+        return head.val == val ? head.next : head;
     }
 }
