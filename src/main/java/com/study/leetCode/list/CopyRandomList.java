@@ -68,6 +68,42 @@ public class CopyRandomList {
         return map.get(head);
     }
 
+    /**
+     * 在解法一的基础上优化成一次遍历（同时复制节点，next节点，random节点并赋值）
+     *
+     * @param head
+     * @return
+     */
+    public Node copyRandomList2(Node head) {
+        if (head == null) {
+            return head;
+        }
+        Node tmp = head;
+        Map<Node, Node> map = new HashMap<>();
+        while (tmp != null) {
+            if (!map.containsKey(tmp)) {
+                Node copyNode = new Node(tmp.val);
+                map.put(tmp, copyNode);
+            }
+            if (tmp.next != null) {
+                if (!map.containsKey(tmp.next)) {
+                    Node copyNext = new Node(tmp.next.val);
+                    map.put(tmp.next, copyNext);
+                }
+                map.get(tmp).next = map.get(tmp.next);
+            }
+            if (tmp.random != null) {
+                if (!map.containsKey(tmp.random)) {
+                    Node copyRandom = new Node(tmp.random.val);
+                    map.put(tmp.random, copyRandom);
+                }
+                map.get(tmp).random = map.get(tmp.random);
+            }
+            tmp = tmp.next;
+        }
+        return map.get(head);
+    }
+
     class Node {
         int val;
         Node next;
