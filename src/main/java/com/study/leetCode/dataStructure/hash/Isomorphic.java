@@ -29,13 +29,13 @@ import java.util.Map;
  */
 public class Isomorphic {
     /**
-     * 利用哈希表的映射关系，将两个字符串中各字符的对应关系存入表中，之后查找这个表做判断。
+     * 解法一：利用哈希表的映射关系，将两个字符串中各字符的对应关系存入表中，之后查找这个表做判断。
      *
      * @param s
      * @param t
      * @return
      */
-    public boolean isIsomorphic(String s, String t) {
+    public static boolean isIsomorphic(String s, String t) {
         if (s.length() != t.length()) {
             return false;
         }
@@ -53,5 +53,30 @@ public class Isomorphic {
             }
         }
         return true;
+    }
+
+    /**
+     * 解法二：不用构建各字符一一对应的关系，只要判断对应字符出现的位置相同即可，也就是两个字符串中相同位置的字符，
+     * 它们在各自字符串中每次出现的位置都应相同。每次比较两字符首次出现的位置。
+     *
+     * @param s
+     * @param t
+     * @return
+     */
+    public static boolean isIsomorphic2(String s, String t) {
+        char[] ch1 = s.toCharArray();
+        char[] ch2 = t.toCharArray();
+        int len = s.length();
+        for (int i = 0; i < len; i++) {
+            if (s.indexOf(ch1[i]) != t.indexOf(ch2[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(isIsomorphic("egg", "add"));
+        System.out.println(isIsomorphic2("foo", "bar"));
     }
 }
