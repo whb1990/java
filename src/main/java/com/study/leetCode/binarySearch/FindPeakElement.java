@@ -24,6 +24,26 @@ package main.java.com.study.leetCode.binarySearch;
  * 或者返回索引 5， 其峰值元素为 6。
  */
 public class FindPeakElement {
+    /**
+     * 直接使用二分查找
+     *
+     * @param nums
+     * @return
+     */
+    public static int findPeakElementIdx(int[] nums) {
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            int middle = left + (right - left) / 2;
+            int next = middle + 1;
+            if (nums[middle] < nums[next]) {
+                left = next;
+            } else {
+                right = middle;
+            }
+        }
+        return left;
+    }
+
     public static int findPeakElement(int[] nums) {
         if (nums.length == 1) {
             return 0;
@@ -40,6 +60,14 @@ public class FindPeakElement {
         return find(nums, 1, nums.length - 2);
     }
 
+    /**
+     * 二分查找
+     *
+     * @param nums
+     * @param left
+     * @param right
+     * @return
+     */
     private static int find(int[] nums, int left, int right) {
         int middle = left + (right - left) / 2;
         if (nums[middle] > nums[middle - 1] && nums[middle] > nums[middle + 1]) {
@@ -53,5 +81,6 @@ public class FindPeakElement {
 
     public static void main(String[] args) {
         System.out.println(findPeakElement(new int[]{1, 2, 3, 1}));
+        System.out.println(findPeakElementIdx(new int[]{1, 2, 1, 3, 5, 6, 4}));
     }
 }
