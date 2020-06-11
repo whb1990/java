@@ -2,6 +2,7 @@ package main.java.com.study.leetCode.dataStructure.tree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * @author: whb
@@ -31,5 +32,29 @@ public class PreorderTraversal {
         }
     }
 
+    /**
+     * 迭代法
+     *
+     * @param root
+     * @return
+     */
+    public List<Integer> preorderTraversalIteration(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root != null) {
+            Stack<TreeNode> stack = new Stack<>();
+            stack.push(root);
+            while (!stack.isEmpty()) {
+                TreeNode cur = stack.pop();
+                result.add(cur.val);
+                if (cur.right != null) {
+                    stack.push(cur.right);
+                }
+                if (cur.left != null) {
+                    stack.push(cur.left);
+                }
+            }
+        }
+        return result;
+    }
 
 }
