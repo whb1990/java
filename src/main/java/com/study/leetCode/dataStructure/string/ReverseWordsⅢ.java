@@ -1,4 +1,4 @@
-package main.java.com.study.leetCode.string;
+package main.java.com.study.leetCode.dataStructure.string;
 
 /**
  * @author: whb
