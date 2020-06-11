@@ -76,7 +76,7 @@ public class TopKFrequentElements {
         }
         //构建小顶堆，维持在k个元素
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((a, b) -> {
-            return frenquencyMap.get(b) - frenquencyMap.get(a);
+            return frenquencyMap.get(a) - frenquencyMap.get(b);
         });
         for (Integer key : frenquencyMap.keySet()) {
             if (priorityQueue.size() < k) {
@@ -97,6 +97,9 @@ public class TopKFrequentElements {
     public static void main(String[] args) {
         int[] nums = new int[]{1, 1, 1, 2, 2, 3, 4};
         int k = 2;
+        System.out.println(Arrays.toString(topKFrequent2(nums, k).toArray()));
+        nums = new int[]{4, 1, -1, 2, -1, 2, 3};
+        k = 2;
         System.out.println(Arrays.toString(topKFrequent2(nums, k).toArray()));
     }
 }
