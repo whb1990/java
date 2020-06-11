@@ -54,6 +54,12 @@ import java.util.Map;
  * 给定数独永远是 9x9 形式的。
  */
 public class ValidSudoku {
+    /**
+     * HashMap解法
+     *
+     * @param board
+     * @return
+     */
     public static boolean isValidSudoku(char[][] board) {
         //HashMap存储遍历过的信息，key为数独宫格内的值，value任意
         Map<Character, Integer> map = new HashMap<>();
@@ -102,6 +108,37 @@ public class ValidSudoku {
         return true;
     }
 
+    /**
+     * 数组解法
+     * 对于与行、列和块中重复数字的检测，只需一次扫描，即创建三个9x9的数组，来记录每一行、每一列和每一块中已出现过的数字情况，
+     * 因为使用数组，所以用O(1)的时间复杂度即可完成数字标记工作，然后只需在对每个数字进行标记之前先确认该数字有没有再该行、该列或该块中出现过即可。
+     * 这里需要注意对块的处理，在这里使用blockIndex = i / 3 * 3 + j / 3，即首先因为数独表格每一列存在三块，所以首先将当前行下标除3求其他所在块在每一列的三个块中的位置，
+     * 然后再将其乘3得到该块所在行的首块下标（每一行存在三个块），最后再加上列下标除3（每一列存在三个块）得到当前坐标所在的块在整体表格中的位置。
+     *
+     * @param board
+     * @return
+     */
+    public static boolean isValidSudoku2(char[][] board) {
+        boolean[][] row = new boolean[9][9];
+        boolean[][] col = new boolean[9][9];
+        boolean[][] block = new boolean[9][9];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] != '.') {
+                    int num = board[i][j] - '1';
+                    int blockIndex = i / 3 * 3 + j / 3;
+                    if (row[i][num] || col[j][num] || block[blockIndex][num]) {
+                        return false;
+                    }
+                    row[i][num] = true;
+                    col[j][num] = true;
+                    block[blockIndex][num] = true;
+                }
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         char[][] board = {
                 {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
@@ -137,6 +174,6 @@ public class ValidSudoku {
                 {'.', '.', '.', '3', '4', '.', '.', '.', '.'},
                 {'.', '.', '.', '.', '.', '3', '.', '.', '.'},
                 {'.', '.', '.', '.', '.', '5', '2', '.', '.'}};
-        System.out.println(isValidSudoku(board));
+        System.out.println(isValidSudoku2(board));
     }
 }
