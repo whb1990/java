@@ -61,4 +61,33 @@ public class PostorderTraversal {
         }
         return result;
     }
+
+    /**
+     * 单栈迭代
+     *
+     * @param root
+     * @return
+     */
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root != null) {
+            Stack<TreeNode> stack = new Stack<>();
+            stack.push(root);
+            while (!stack.isEmpty()) {
+                TreeNode cur = stack.pop();
+                if (cur.left == null && cur.right == null) {
+                    result.add(cur.val);
+                    continue;
+                }
+                stack.push(new TreeNode(cur.val));
+                if (cur.right != null) {
+                    stack.push(cur.right);
+                }
+                if (cur.left != null) {
+                    stack.push(cur.left);
+                }
+            }
+        }
+        return result;
+    }
 }
