@@ -34,4 +34,30 @@ public class MaxDepth {
         }
         return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
     }
+
+    /**
+     * 自顶向下递归
+     *
+     * @param root
+     * @return
+     */
+    int result = 0;
+
+    public int maxDepth2(TreeNode root) {
+        if (root != null) {
+            maxDepth(root, 1);
+        }
+        return result;
+    }
+
+    private void maxDepth(TreeNode root, int depth) {
+        if (root == null) {
+            return;
+        }
+        if (root.left == null && root.right == null) {
+            result = Math.max(result, depth);
+        }
+        maxDepth(root.left, depth + 1);
+        maxDepth(root.right, depth + 1);
+    }
 }
