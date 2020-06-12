@@ -2,6 +2,7 @@ package main.java.com.study.leetCode.dataStructure.tree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * @author: whb
@@ -30,5 +31,34 @@ public class PostorderTraversal {
             postorderRecursion(root.right, result);
             result.add(root.val);
         }
+    }
+
+    /**
+     * 迭代法（用两个栈）
+     *
+     * @param root
+     * @return
+     */
+    public List<Integer> postorderTraversalIteration(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root != null) {
+            Stack<TreeNode> nodeStack = new Stack<>();
+            Stack<Integer> valStack = new Stack<>();
+            nodeStack.push(root);
+            while (!nodeStack.isEmpty()) {
+                TreeNode tmp = nodeStack.pop();
+                valStack.push(tmp.val);
+                if (tmp.left != null) {
+                    nodeStack.push(tmp.left);
+                }
+                if (tmp.right != null) {
+                    nodeStack.push(tmp.right);
+                }
+            }
+            while (!valStack.isEmpty()) {
+                result.add(valStack.pop());
+            }
+        }
+        return result;
     }
 }
