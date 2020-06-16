@@ -104,6 +104,94 @@ public class CopyRandomList {
         return map.get(head);
     }
 
+    /**
+     * 1、生成所有的节点，并且分别插入到原有节点的后边
+     * 2、更新插入节点的 random
+     * 3、将新旧节点分离开来
+     *
+     * @param head
+     * @return
+     */
+    public Node copyRandomList3(Node head) {
+        if (head == null) {
+            return null;
+        }
+        Node l1 = head;
+        Node l2 = null;
+        //生成所有的结点，并且分别插入到原有节点的后边
+        while (l1 != null) {
+            l2 = new Node(l1.val);
+            l2.next = l1.next;
+            l1.next = l2;
+            l1 = l1.next.next;
+        }
+        //更新插入结点的random
+        l1 = head;
+        while (l1 != null) {
+            if (l1.random != null) {
+                l1.next.random = l1.random;
+            }
+            l1 = l1.next.next;
+        }
+        l1 = head;
+        Node l2_head = l1.next;
+        //将新旧节点拆开
+        while (l1 != null) {
+            l2 = l1.next;
+            l1.next = l2.next;
+            if (l2.next != null) {
+                l2.next = l2.next.next;
+            }
+            l1 = l1.next;
+        }
+        return l2_head;
+    }
+
+    /**
+     * 解法三利用原链表的 next 域把新生成的节点保存了起来。类似的，我们还可以利用原链表的 random 域把新生成的节点保存起来。
+     * <p>
+     * 主要还是三个步骤。
+     * <p>
+     * 生成所有的节点，将它们保存到原链表的 random 域，同时利用新生成的节点的 next 域保存原链表的 random。
+     * 更新新生成节点的 random 指针。
+     * 恢复原链表的 random 指针，同时更新新生成节点的 next 指针。
+     *
+     * @param head
+     * @return
+     */
+    public Node copyRandomList4(Node head) {
+        if (head == null) {
+            return null;
+        }
+        Node l1 = head;
+        Node l2 = null;
+        //生成所有的节点，将它们保存到原链表的random域
+        //同时利用新生成的节点的next域保存原链表的random域
+        while (l1 != null) {
+            l2 = new Node(l1.val);
+            l2.next = l1.random;
+            l1.random = l2;
+            l1 = l1.next;
+        }
+        l1 = head;
+        //更新新生成节点的random域
+        while (l1 != null) {
+            l2 = l1.random;
+            l2.random = l2.next != null ? l2.next.random : null;
+            l1 = l1.next;
+        }
+        l1 = head;
+        Node l2_head = l1.random;
+        //恢复原链表的random指针，同时更新新生成节点的next指针
+        while (l1 != null) {
+            l2 = l1.random;
+            l1.random = l2.next;
+            l2.next = l1.next != null ? l1.next.random : null;
+            l1 = l1.next;
+        }
+        return l2_head;
+    }
+
     class Node {
         int val;
         Node next;
