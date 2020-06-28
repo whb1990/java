@@ -7,7 +7,7 @@ import java.util.Stack;
 /**
  * @author: whb
  * @date: 2020/6/11 19:48
- * @description: LeetCode-145-二叉树的中序遍历
+ * @description: LeetCode-145-二叉树的后序遍历
  */
 public class PostorderTraversal {
 
