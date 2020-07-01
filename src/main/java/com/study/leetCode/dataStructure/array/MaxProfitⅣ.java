@@ -48,7 +48,30 @@ public class MaxProfitⅣ {
         return Math.max(dp[prices.length - 1][0], dp[prices.length - 1][2]);
     }
 
+    /**
+     * 动态规划解法二
+     *
+     * @param prices
+     * @return
+     */
+    public static int maxProfit2(int[] prices) {
+        if (prices == null || prices.length <= 1) {
+            return 0;
+        }
+        // buy代表当天买股票的最大收益，sell代表当天卖出股票的最大收益， coolDown代表冷冻期的收益
+        int buy = -prices[0], sell = 0, coolDown = 0;
+        for (int i = 1; i < prices.length; i++) {
+            int p = prices[i];
+            int tmp = buy;
+            buy = Math.max(buy, coolDown - p);
+            coolDown = sell;
+            sell = Math.max(sell, tmp + p);
+        }
+        return sell;
+    }
+
     public static void main(String[] args) {
         System.out.println(maxProfit(new int[]{1, 2, 3, 0, 2}));
+        System.out.println(maxProfit2(new int[]{1, 2, 3, 0, 2}));
     }
 }
