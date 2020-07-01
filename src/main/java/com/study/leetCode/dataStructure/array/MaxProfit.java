@@ -24,6 +24,25 @@ package main.java.com.study.leetCode.dataStructure.array;
  */
 public class MaxProfit {
     /**
+     * 动态规划
+     *
+     * @param prices
+     * @return
+     */
+    public static int maxProfitDp(int[] prices) {
+        if (prices == null || prices.length <= 1) {
+            return 0;
+        }
+        int min = prices[0];
+        int[] dp = new int[prices.length];
+        for (int i = 1; i < prices.length; i++) {
+            min = Math.min(min, prices[i]);
+            dp[i] = Math.max(dp[i - 1], prices[i] - min);
+        }
+        return dp[prices.length - 1];
+    }
+
+    /**
      * 一次遍历
      * 首先设两个数，一个保存最小数，一个保存结果（即最大差值）
      *
@@ -51,5 +70,7 @@ public class MaxProfit {
     public static void main(String[] args) {
         System.out.println(maxProfit(new int[]{7, 1, 5, 3, 6, 4}));
         System.out.println(maxProfit(new int[]{7, 6, 4, 3, 1}));
+        System.out.println(maxProfitDp(new int[]{7, 1, 5, 3, 6, 4}));
+        System.out.println(maxProfitDp(new int[]{7, 6, 4, 3, 1}));
     }
 }
