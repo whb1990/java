@@ -35,6 +35,26 @@ package main.java.com.study.leetCode.dataStructure.array;
  */
 public class MaxProfitⅡ {
     /**
+     * 贪心算法
+     * 只要后一天比前一天大 就把这两天的差值加一下
+     *
+     * @param prices
+     * @return
+     */
+    public static int maxProfitTx(int[] prices) {
+        if (prices == null || prices.length <= 1) {
+            return 0;
+        }
+        int result = 0;
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i - 1]) {
+                result += prices[i] - prices[i - 1];
+            }
+        }
+        return result;
+    }
+
+    /**
      * 峰谷法
      *
      * @param prices
@@ -57,5 +77,8 @@ public class MaxProfitⅡ {
         System.out.println(maxProfit(new int[]{7, 1, 5, 3, 6, 4}));
         System.out.println(maxProfit(new int[]{1, 2, 3, 4, 5}));
         System.out.println(maxProfit(new int[]{7, 6, 4, 3, 1}));
+        System.out.println(maxProfitTx(new int[]{7, 1, 5, 3, 6, 4}));
+        System.out.println(maxProfitTx(new int[]{1, 2, 3, 4, 5}));
+        System.out.println(maxProfitTx(new int[]{7, 6, 4, 3, 1}));
     }
 }

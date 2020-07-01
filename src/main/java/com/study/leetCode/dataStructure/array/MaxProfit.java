@@ -43,7 +43,7 @@ public class MaxProfit {
     }
 
     /**
-     * 一次遍历
+     * 贪心算法
      * 首先设两个数，一个保存最小数，一个保存结果（即最大差值）
      *
      * @param prices
