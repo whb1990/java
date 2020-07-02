@@ -2,76 +2,67 @@ package main.java.com.study.leetCode.dataStructure.array;
 
 /**
  * @author: whb
- * @date: 2020/7/1 19:33
- * @description: LeetCode-309-买卖股票的最佳时机包含冷冻期
- * 难度：中等
- * 给定一个整数数组，其中第 i 个元素代表了第 i 天的股票价格 。​
+ * @date: 2020/7/2 19:01
+ * @description: LeetCode-188-买卖股票的最佳时机Ⅳ
+ * 难度：困难
+ * 给定一个数组，它的第 i 个元素是一支给定的股票在第 i 天的价格。
  * <p>
- * 设计一个算法计算出最大利润。在满足以下约束条件下，你可以尽可能地完成更多的交易（多次买卖一支股票）:
+ * 设计一个算法来计算你所能获取的最大利润。你最多可以完成 k 笔交易。
  * <p>
- * 你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
- * 卖出股票后，你无法在第二天买入股票 (即冷冻期为 1 天)。
- * 示例:
- * 输入: [1,2,3,0,2]
- * 输出: 3
- * 解释: 对应的交易状态为: [买入, 卖出, 冷冻期, 买入, 卖出]
+ * 注意: 你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+ * <p>
+ * 示例 1:
+ * 输入: [2,4,1], k = 2
+ * 输出: 2
+ * 解释: 在第 1 天 (股票价格 = 2) 的时候买入，在第 2 天 (股票价格 = 4) 的时候卖出，这笔交易所能获得利润 = 4-2 = 2 。
+ * <p>
+ * 示例 2:
+ * 输入: [3,2,6,5,0,3], k = 2
+ * 输出: 7
+ * 解释: 在第 2 天 (股票价格 = 2) 的时候买入，在第 3 天 (股票价格 = 6) 的时候卖出, 这笔交易所能获得利润 = 6-2 = 4 。
+ *      随后，在第 5 天 (股票价格 = 0) 的时候买入，在第 6 天 (股票价格 = 3) 的时候卖出, 这笔交易所能获得利润 = 3-0 = 3 。
  */
 public class MaxProfitⅣ {
     /**
-     * 动态规划
-     *
-     * @param prices
-     * @return
-     */
-    public static int maxProfit(int[] prices) {
-        if (prices == null || prices.length <= 1) {
+     * 当k大于等于数组长度一半时, 问题退化为贪心问题此时采用 买卖股票的最佳时机 II 的贪心方法解决可以大幅提升时间性能,
+     * 对于其他的k, 可以采用 买卖股票的最佳时机 III 的方法来解决,
+     * 在III中定义了两次买入和卖出时最大收益的变量, 在这里就是k组这样的 变量,
+     * 即问题IV是对问题III的推广, t[i][0]和t[i][1]分别表示第i比交易买入和卖出时各自的最大收益
+     **/
+    public static int maxProfit(int[] prices, int k) {
+        if (prices == null || k <= 1) {
             return 0;
         }
-        //由于可以无限次交易，所以只定义两个维度，第一个维度是天数，第二个维度表示是否持有股票，0表示不持有，1表示持有，2表示过渡期
-        int[][] dp = new int[prices.length][3];
-        dp[0][0] = 0;
-        dp[0][1] = -prices[0];
-        dp[0][2] = 0;
-        for (int i = 1; i < prices.length; i++) {
-            //第i天不持有股票的情况有两种
-            //a.第i-1天也不持有股票
-            //b.第i-1天是过渡期
-            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][2]);
-            //第i天持有股票的情况有两种
-            //a. 第i-1天也持有股票，第i天不操作
-            //b.第i-1天不持有股票，在第i天买入
-            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i]);
-            //第i天是冷冻期只有一种情况，第i-1天持有股票且卖出
-            dp[i][2] = dp[i - 1][1] + prices[i];
+        if (k >= prices.length / 2) {
+            return greedy(prices);
         }
-        //最大利润为最后一天，不持有股票或者进入冷冻期的情况
-        return Math.max(dp[prices.length - 1][0], dp[prices.length - 1][2]);
+        int[][] dp = new int[k][2];
+        for (int i = 0; i < k; i++) {
+            dp[i][0] = Integer.MIN_VALUE;
+        }
+        for (int p : prices) {
+            dp[0][0] = Math.max(dp[0][0], -p);
+            dp[0][1] = Math.max(dp[0][1], dp[0][0] + p);
+            for (int i = 1; i < k; i++) {
+                dp[i][0] = Math.max(dp[i][0], dp[i - 1][1] - p);
+                dp[i][1] = Math.max(dp[i][1], dp[i][0] + p);
+            }
+        }
+        return dp[k - 1][1];
     }
 
-    /**
-     * 动态规划解法二
-     *
-     * @param prices
-     * @return
-     */
-    public static int maxProfit2(int[] prices) {
-        if (prices == null || prices.length <= 1) {
-            return 0;
-        }
-        // buy代表当天买股票的最大收益，sell代表当天卖出股票的最大收益， coolDown代表冷冻期的收益
-        int buy = -prices[0], sell = 0, coolDown = 0;
+    private static int greedy(int[] prices) {
+        int result = 0;
         for (int i = 1; i < prices.length; i++) {
-            int p = prices[i];
-            int tmp = buy;
-            buy = Math.max(buy, coolDown - p);
-            coolDown = sell;
-            sell = Math.max(sell, tmp + p);
+            if (prices[i] > prices[i - 1]) {
+                result += prices[i] - prices[i - 1];
+            }
         }
-        return sell;
+        return result;
     }
 
     public static void main(String[] args) {
-        System.out.println(maxProfit(new int[]{1, 2, 3, 0, 2}));
-        System.out.println(maxProfit2(new int[]{1, 2, 3, 0, 2}));
+        System.out.println(maxProfit(new int[]{2, 4, 1}, 2));
+        System.out.println(maxProfit(new int[]{3, 2, 6, 5, 0, 3}, 2));
     }
 }
