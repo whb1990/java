@@ -21,7 +21,7 @@ package main.java.com.study.leetCode.dp;
  */
 public class MinPathSum {
     /**
-     * 动态规划解法
+     * 动态规划-二维数组解法
      * 用一个同样大小的二维数组dp来存储走到每个位置上最小的和。
      * dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
      *
@@ -56,8 +56,38 @@ public class MinPathSum {
         return dp[row - 1][col - 1];
     }
 
+    /**
+     * 动态规划-一维数组解法
+     * 解法1中使用dp数组的空间大小为M*N，其实可以对dp数组的空间压缩至N，定义大小为N的dp数组，
+     * 对于第一行，dp[i]=dp[i-1]+m[0][i],在求第二行中的 dp[i] 时可以覆盖第一行 dp[i] ,第二行dp[i]=Math.min（dp[i],dp[i-1]）+m[i][j]。
+     *
+     * @param grid
+     * @return
+     */
+    public static int minPathSum2(int[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0] == null || grid[0].length == 0) {
+            return 0;
+        }
+        int[] dp = new int[grid[0].length];
+        dp[0] = grid[0][0];
+        for (int j = 1; j < grid[0].length; j++) {
+            //求出第一行的dp
+            dp[j] = dp[j - 1] + grid[0][j];
+        }
+        for (int i = 1; i < grid.length; i++) {
+            dp[0] = grid[i][0] + dp[0];
+            //dp[0]代表每一行最左边的dp，
+            //后一行的dp覆盖前一行的dp
+            for (int j = 1; j < grid[0].length; j++) {
+                dp[j] = Math.min(dp[j - 1] + grid[i][j], dp[j] + grid[i][j]);
+            }
+        }
+        return dp[grid[0].length - 1];
+    }
+
     public static void main(String[] args) {
         int[][] grid = new int[][]{{1, 3, 1}, {1, 5, 1}, {4, 2, 1}};
         System.out.println(minPathSum(grid));
+        System.out.println(minPathSum2(grid));
     }
 }
