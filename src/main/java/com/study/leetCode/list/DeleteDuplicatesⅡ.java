@@ -16,6 +16,12 @@ package main.java.com.study.leetCode.list;
  * 输出: 2->3
  */
 public class DeleteDuplicatesⅡ {
+    /**
+     * 递归解法一
+     *
+     * @param head
+     * @return
+     */
     public ListNode deleteDuplicates(ListNode head) {
         if (head == null || head.next == null) {
             return head;
@@ -32,5 +38,60 @@ public class DeleteDuplicatesⅡ {
         //不重复就将当前的head连接下一个返回并继续深搜
         head.next = deleteDuplicates(head.next);
         return head;
+    }
+
+    public ListNode deleteDuplicates2(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode next = head.next;
+        //如果是这种情况
+        //      1 --> 1 --> 1 --> 2 --> 3
+        //     head  next
+        //1.则需要移动next直到出现与当前head.value不相等的情况（含null）
+        //2.并且此时的head已经不能要了，因为已经head是重复的节点
+        //--------------else-------------
+        //      1 --> 2 --> 3
+        //     head  next
+        //3.如果没有出现1的情况，则递归返回的节点就作为head的子节点
+        if (head.val == next.val) {
+            //1
+            while (next != null && head.val == next.val) {
+                next = next.next;
+            }
+            //2
+            return deleteDuplicates(next);
+        }
+        //3
+        head.next = deleteDuplicates(head.next);
+        return head;
+    }
+
+    /**
+     * 迭代法
+     * p 是游标，不断的向后遍历寻找符合条件的位置。
+     * 重点在于 prev， 如果 prev 之后有重复元素，prev 是不会移动的。
+     *
+     * @param head
+     * @return
+     */
+    public ListNode deleteDuplicates3(ListNode head) {
+        ListNode dummy = new ListNode(-1);
+        ListNode prev = dummy;
+        ListNode p = head;
+        while (p != null) {
+            if (p.next == null || p.next.val != p.val) {
+                prev.next = p;
+                prev = prev.next;
+            } else {
+                while (p.next != null && p.next.val == p.val) {
+                    p = p.next;
+                }
+            }
+            p = p.next;
+        }
+        //清理脏借点
+        prev.next = null;
+        return dummy.next;
     }
 }
