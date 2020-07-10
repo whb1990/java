@@ -34,12 +34,7 @@ public class MergeKLists {
             return null;
         }
         //创建一个堆，并设置元素的排序方式
-        PriorityQueue<ListNode> queue = new PriorityQueue<>(new Comparator<ListNode>() {
-            @Override
-            public int compare(ListNode o1, ListNode o2) {
-                return o1.val - o2.val;
-            }
-        });
+        PriorityQueue<ListNode> queue = new PriorityQueue<>((o1, o2) -> o1.val - o2.val);
         //遍历链表数组，然后将每个链表的每个节点都放入堆中
         for (ListNode tmp : lists) {
             while (tmp != null) {
