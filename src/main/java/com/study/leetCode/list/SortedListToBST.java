@@ -54,4 +54,34 @@ public class SortedListToBST {
         root.right = convertToBST(list, middle + 1, right);
         return root;
     }
+
+    /**
+     * 解法二：快慢指针找到中间节点构建二叉搜索树
+     *
+     * @param head
+     * @return
+     */
+    public TreeNode sortedListToBST2(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        if (head.next == null) {
+            return new TreeNode(head.val);
+        }
+        ListNode pre = head;
+        ListNode slow = pre.next;
+        ListNode fast = slow.next;
+        //找到链表的中间节点slow
+        while (fast != null && fast.next != null) {
+            pre = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        //从中间节点将链表断开
+        pre.next = null;
+        TreeNode root = new TreeNode(slow.val);
+        root.left = sortedListToBST(head);
+        root.right = sortedListToBST(slow.next);
+        return root;
+    }
 }
