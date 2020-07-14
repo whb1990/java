@@ -9,11 +9,11 @@ import java.util.List;
  * @description: LeetCode-120-三角形最小路径和
  * 难度：中等
  * 给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。
- *
+ * <p>
  * 相邻的结点 在这里指的是 下标 与 上一层结点下标 相同或者等于 上一层结点下标 + 1 的两个结点。
- *
+ * <p>
  * 例如，给定三角形：
- *
+ * <p>
  * [
  *      [2],
  *     [3,4],
@@ -49,6 +49,29 @@ public class MinimumTotal {
         return dp[0][0];
     }
 
+    /**
+     * 动态规划-一维数组解法
+     * 从底自顶不断找每行最小值直到最顶一个元素结束，开辟个dp[N+1] 的数组来保存每行最小值，到顶就是dp[0]为最小和值
+     *
+     * @param triangle
+     * @return
+     */
+    public static int minimumTotal2(List<List<Integer>> triangle) {
+        int[] dp = new int[triangle.size() + 1];
+        if (triangle.size() == 1) {
+            dp[0] = triangle.get(triangle.size() - 1).get(0);
+        }
+        //核心比较一个元素的下面和前面那个小保存相加。自底向顶相加
+        for (int i = triangle.size() - 1; i >= 0; i--) {
+            for (int j = 0; j <= i; j++) {
+                //开始利用循环把最后一行值存起来，如上面注释那样，其实不用，开始dp开始都为0值
+                //加上tringle对应的最后一行值就是初始化最后一行了
+                dp[j] = Math.min(dp[j], dp[j + 1]) + triangle.get(i).get(j);
+            }
+        }
+        return dp[0];
+    }
+
     public static void main(String[] args) {
         List<List<Integer>> triangle = new ArrayList<>();
         List<Integer> tmp = new ArrayList<>();
@@ -70,5 +93,6 @@ public class MinimumTotal {
         tmp.add(3);
         triangle.add(tmp);
         System.out.println(minimumTotal(triangle));
+        System.out.println(minimumTotal2(triangle));
     }
 }
