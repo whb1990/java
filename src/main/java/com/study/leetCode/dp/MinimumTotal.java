@@ -58,9 +58,6 @@ public class MinimumTotal {
      */
     public static int minimumTotal2(List<List<Integer>> triangle) {
         int[] dp = new int[triangle.size() + 1];
-        if (triangle.size() == 1) {
-            dp[0] = triangle.get(triangle.size() - 1).get(0);
-        }
         //核心比较一个元素的下面和前面那个小保存相加。自底向顶相加
         for (int i = triangle.size() - 1; i >= 0; i--) {
             for (int j = 0; j <= i; j++) {
