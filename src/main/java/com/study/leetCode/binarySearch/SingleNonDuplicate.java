@@ -7,6 +7,16 @@ import java.util.Map;
  * @author: whb
  * @date: 2020/3/18 14:29
  * @description: LeetCode-540-有序数组中的单一元素
+ * 难度：中等
+ * 给定一个只包含整数的有序数组，每个元素都会出现两次，唯有一个数只会出现一次，找出这个数。
+ * <p>
+ * 示例 1:
+ * 输入: [1,1,2,3,3,4,4,8,8]
+ * 输出: 2
+ * <p>
+ * 示例 2:
+ * 输入: [3,3,7,7,10,11,11]
+ * 输出: 10
  */
 public class SingleNonDuplicate {
     /**
@@ -127,6 +137,9 @@ public class SingleNonDuplicate {
 
     public static void main(String[] args) {
         int[] nums = new int[]{3, 3, 7, 7, 10, 11, 11};
+        System.out.println(singleNonDuplicate(nums));
+        System.out.println(singleNonDuplicate2(nums));
         System.out.println(singleNonDuplicate3(nums));
+        System.out.println(singleNonDuplicate4(nums));
     }
 }
