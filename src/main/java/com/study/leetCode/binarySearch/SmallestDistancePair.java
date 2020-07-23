@@ -6,6 +6,7 @@ import java.util.Arrays;
  * @author: whb
  * @date: 2020/6/10 17:30
  * @description: LeetCode-719-找出第k小的距离对
+ * 难度：困难
  * 给定一个整数数组，返回所有数对之间的第 k 个最小距离。一对 (A, B) 的距离被定义为 A 和 B 之间的绝对差值。
  * <p>
  * 示例 1:
