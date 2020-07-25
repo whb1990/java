@@ -75,5 +75,6 @@ public class SplitArray {
 
     public static void main(String[] args) {
         System.out.println(splitArray(new int[]{7, 2, 5, 10, 8}, 2));
+        System.out.println(splitArray(new int[]{1, 2147483647}, 2));
     }
 }
