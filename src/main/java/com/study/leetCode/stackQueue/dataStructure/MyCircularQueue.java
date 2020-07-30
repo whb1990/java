@@ -1,4 +1,4 @@
-package main.java.com.study.leetCode.dataStructure;
+package main.java.com.study.leetCode.stackQueue.dataStructure;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -6,7 +6,8 @@ import java.util.Queue;
 /**
  * @author: whb
  * @date: 2020/5/28 17:22
- * @description: LeetCode-设计循环队列
+ * @description: LeetCode-622-设计循环队列
+ * 难度：中等
  * 循环队列是一种线性数据结构，其操作表现基于 FIFO（先进先出）原则并且队尾被连接在队首之后以形成一个循环。它也被称为“环形缓冲器”。
  * <p>
  * 循环队列的一个好处是可以利用这个队列之前用过的空间。在一个普通队列里，一旦一个队列满了，就不能插入下一个元素，即使在队列前面仍有空间。但是使用循环队列，就能使用这些空间去存储新的值。
