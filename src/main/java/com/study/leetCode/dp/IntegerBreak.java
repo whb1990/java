@@ -6,12 +6,12 @@ package main.java.com.study.leetCode.dp;
  * @description: LeetCode-343-整数拆分
  * 难度：中等
  * 给定一个正整数 n，将其拆分为至少两个正整数的和，并使这些整数的乘积最大化。 返回你可以获得的最大乘积。
- *
+ * <p>
  * 示例 1:
  * 输入: 2
  * 输出: 1
  * 解释: 2 = 1 + 1, 1 × 1 = 1。
- *
+ * <p>
  * 示例 2:
  * 输入: 10
  * 输出: 36
@@ -19,6 +19,38 @@ package main.java.com.study.leetCode.dp;
  * 说明: 你可以假设 n 不小于 2 且不大于 58。
  */
 public class IntegerBreak {
+    /**
+     * 动态规划
+     * ①使用dp[i]表示正整数i的最大乘积，则dp[i]=max{dp[i-1]*1,(i-1)*1,dp[i-2]*2,(i-2)*2,...,dp[i-(i-1)]*(i-1),(i-(i-1))*(i-1)};
+     * <p>
+     * ②由①可知，dp[i]的状态就能转化为其他dp[1]...dp[i-1]可得，但事实并没有这么麻烦，因为这些正整数拆分最终总会拆分为2,3和少数的1.比如：
+     * <p>
+     * 2：1*1=1；
+     * <p>
+     * 3：1*2=2；
+     * <p>
+     * 4：2*2=4；
+     * <p>
+     * 5：2*3=6；
+     * <p>
+     * 因此调整状态转移方程为：
+     * <p>
+     * dp[i]=max(dp[i-2]*2,(i-2)*2,dp[i-3]*3,(i-3)*3);
+     *
+     * @param n
+     * @return
+     */
+    public static int integerBreakDp(int n) {
+        if (n < 4) {
+            return n - 1;
+        }
+        int[] dp = new int[n + 1];
+        for (int i = 3; i < dp.length; i++) {
+            dp[i] = Math.max(Math.max(2 * (i - 2), 2 * dp[i - 2]), Math.max(3 * (i - 3), 3 * dp[i - 3]));
+        }
+        return dp[n];
+    }
+
     /**
      * 找规律
      * 正整数从1开始，但是1不能拆分成两个正整数之和，所以不能当输入。
@@ -65,5 +97,8 @@ public class IntegerBreak {
         System.out.println(integerBreak(2));
         System.out.println(integerBreak(3));
         System.out.println(integerBreak(10));
+        System.out.println(integerBreakDp(2));
+        System.out.println(integerBreakDp(3));
+        System.out.println(integerBreakDp(10));
     }
 }
