@@ -69,5 +69,6 @@ public class CanFinish {
     public static void main(String[] args) {
         System.out.println(canFinish(2, new int[][]{{1, 0}}));
         System.out.println(canFinish(2, new int[][]{{1, 0}, {0, 1}}));
+        System.out.println(canFinish(4, new int[][]{{1, 0}, {2, 0}, {3, 1}, {3, 2}}));
     }
 }
