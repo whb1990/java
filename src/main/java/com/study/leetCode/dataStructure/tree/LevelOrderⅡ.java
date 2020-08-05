@@ -8,7 +8,8 @@ import java.util.Queue;
 /**
  * @author: whb
  * @date: 2020/6/12 10:42
- * @description: LeetCode-102-层序遍历
+ * @description: LeetCode-102-层序遍历/剑指 Offer 32 - II. 从上到下打印二叉树 II
+ * 难度：简单
  * 给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）。
  *
  * 示例：
@@ -27,7 +28,7 @@ import java.util.Queue;
  *   [15,7]
  * ]
  */
-public class LevelOrder {
+public class LevelOrderⅡ {
     public List<List<Integer>> levelOrder(TreeNode root) {
         List<List<Integer>> result = new ArrayList<>();
         if (root != null) {
