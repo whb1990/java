@@ -55,9 +55,29 @@ public class Rob {
         return dp[nums.length - 1];
     }
 
+    /**
+     * 压缩状态机的动态规划
+     *
+     * @param nums
+     * @return
+     */
+    public static int rob2(int[] nums) {
+        int preMax = 0, curMax = 0;
+        //转移状态 max(dp[k-2]+Ak,dp[k-1])
+        for (int num : nums) {
+            int tmp = curMax;
+            curMax = Math.max(preMax + num, curMax);
+            preMax = tmp;
+        }
+        return curMax;
+    }
+
     public static void main(String[] args) {
         System.out.println(rob(new int[]{1, 2, 3, 1}));
         System.out.println(rob(new int[]{2, 7, 9, 3, 1}));
         System.out.println(rob(new int[]{2, 1, 1, 2}));
+        System.out.println(rob2(new int[]{1, 2, 3, 1}));
+        System.out.println(rob2(new int[]{2, 7, 9, 3, 1}));
+        System.out.println(rob2(new int[]{2, 1, 1, 2}));
     }
 }
