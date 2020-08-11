@@ -1,4 +1,4 @@
-package main.java.com.study.leetCode.dataStructure;
+package main.java.com.study.leetCode.dataStructure.dfsbfs;
 
 import java.util.*;
 
