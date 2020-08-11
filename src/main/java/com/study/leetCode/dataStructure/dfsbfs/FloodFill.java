@@ -1,4 +1,4 @@
-package main.java.com.study.leetCode.stackQueue;
+package main.java.com.study.leetCode.dataStructure.dfsbfs;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -8,6 +8,8 @@ import java.util.Queue;
  * @author: whb
  * @date: 2020/5/29 16:59
  * @description: LeetCode-733-图像渲染
+ * 难度：简单
+ * 标签：深度优先搜索、广度优先搜索
  * 有一幅以二维整数数组表示的图画，每一个整数表示该图画的像素值大小，数值在 0 到 65535 之间。
  * <p>
  * 给你一个坐标 (sr, sc) 表示图像渲染开始的像素值（行 ，列）和一个新的颜色值 newColor，让你重新上色这幅图像。
