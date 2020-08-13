@@ -51,7 +51,33 @@ public class AddStrings {
         return stack;
     }
 
+    /**
+     * 模拟竖式加法
+     * 竖式加法就是将相同数位对齐，从低到高逐位相加，如果当前位和超过 10，则向高位进一位。
+     * 定义两个指针 i 和 j 分别指向 num1 和 num2 的末尾，即最低位，同时定义一个变量 carry 维护当前是否有进位，然后从末尾到开头逐位相加即可。
+     * 两个数字位数不同怎么处理，这里统一在指针当前下标处于负数的时候返回 0，等价于对位数较短的数字进行了补零操作，这样就可以除去两个数字位数不同情况的处理。
+     *
+     * @param num1
+     * @param num2
+     * @return
+     */
+    public static String addStrings2(String num1, String num2) {
+        int m = num1.length() - 1, n = num2.length() - 1, carry = 0;
+        StringBuffer result = new StringBuffer();
+        while (m >= 0 || n >= 0 || carry != 0) {
+            int n1 = m >= 0 ? num1.charAt(m) - '0' : 0;
+            int n2 = n >= 0 ? num2.charAt(n) - '0' : 0;
+            int sum = n1 + n2 + carry;
+            carry = sum / 10;
+            result.append(sum % 10);
+            m--;
+            n--;
+        }
+        return result.reverse().toString();
+    }
+
     public static void main(String[] args) {
         System.out.println(addStrings("123", "456"));
+        System.out.println(addStrings2("123", "456"));
     }
 }
