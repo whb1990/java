@@ -43,7 +43,7 @@ public class Exchange {
     public static int[] exchange(int[] nums) {
         int i = 0, j = nums.length - 1, tmp;
         while (i < j) {
-            //x&1 位运算 等价于 x \% 2x%2 取余运算，即皆可用于判断数字奇偶性。
+            //x&1 位运算 等价于 x%2 取余运算，即皆可用于判断数字奇偶性。
             while (i < j && (nums[i] & 1) == 1) {
                 i++;
             }
