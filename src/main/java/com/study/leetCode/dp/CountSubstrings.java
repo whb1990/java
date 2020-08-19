@@ -65,8 +65,30 @@ public class CountSubstrings {
         return result;
     }
 
+    /**
+     * 动态规划
+     *
+     * @param s
+     * @return
+     */
+    public static int countSubstringsDP(String s) {
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        int result = 0;
+        for (int j = 0; j < s.length(); j++) {
+            for (int i = 0; i <= j; i++) {
+                if (s.charAt(i) == s.charAt(j) && (j - i < 2 || dp[i + 1][j - 1])) {
+                    dp[i][j] = true;
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
         System.out.println(countSubstrings("abc"));
         System.out.println(countSubstrings("aaa"));
+        System.out.println(countSubstringsDP("abc"));
+        System.out.println(countSubstringsDP("aaa"));
     }
 }
