@@ -34,6 +34,11 @@ import java.util.function.IntConsumer;
  */
 public class FizzBuzzSemaphore {
     private int n;
+    /**
+     * 四个线程第一次执行时，因为只有number信号量的计数器初始值为1，其余都为0，所以number线程先执行，
+     * 让它不断判断接下来该哪个线程执行，并释放对应线程的信号量，对应线程执行一次循环后，释放number信号量，
+     * 以便number线程继续判断。
+     */
     private Semaphore fizz = new Semaphore(0);
     private Semaphore buzz = new Semaphore(0);
     private Semaphore fizzbuzz = new Semaphore(0);
