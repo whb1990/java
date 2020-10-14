@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author： whb
- * @description： LeetCode-1195-交替打印字符串
+ * @description： LeetCode-1115-交替打印字符串
  * @date： 2020-10-14 15:52
  */
 public class FooBarLock {
