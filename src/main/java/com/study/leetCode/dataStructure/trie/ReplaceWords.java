@@ -93,6 +93,32 @@ public class ReplaceWords {
         System.out.println(obj.replaceWords(Arrays.asList("a", "aa", "aaa", "aaaa"), "a aa a aaaa aaa aaa aaa aaaaaa bbb baba ababa"));
         System.out.println(obj.replaceWords(Arrays.asList("catt", "cat", "bat", "rat"), "the cattle was rattled by the battery"));
         System.out.println(obj.replaceWords(Arrays.asList("ac", "ab"), "it is abnormal that this solution is accepted"));
+        System.out.println("===============================================================================");
+        System.out.println(replaceWord(Arrays.asList("cat", "bat", "rat"), "the cattle was rattled by the battery"));
+        System.out.println(replaceWord(Arrays.asList("a", "b", "c"), "aadsfasf absbs bbab cadsfafs"));
+        System.out.println(replaceWord(Arrays.asList("a", "aa", "aaa", "aaaa"), "a aa a aaaa aaa aaa aaa aaaaaa bbb baba ababa"));
+        System.out.println(replaceWord(Arrays.asList("catt", "cat", "bat", "rat"), "the cattle was rattled by the battery"));
+        System.out.println(replaceWord(Arrays.asList("ac", "ab"), "it is abnormal that this solution is accepted"));
+    }
+
+    /**
+     * 普通解法，使用字符串的函数
+     *
+     * @param dictionary
+     * @param sentence
+     * @return
+     */
+    public static String replaceWord(List<String> dictionary, String sentence) {
+        StringBuffer res = new StringBuffer();
+        for (String senStr : sentence.split("\\s+")) {
+            for (String dic : dictionary) {
+                if (senStr.startsWith(dic)) {
+                    senStr = dic;
+                }
+            }
+            res.append(senStr).append(" ");
+        }
+        return res.toString().trim();
     }
 
     class TrieNode {
