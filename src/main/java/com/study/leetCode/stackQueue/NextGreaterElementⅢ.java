@@ -38,7 +38,7 @@ public class NextGreaterElementⅢ {
      *
      *  时间复杂度：O(n)。最坏情况下，只会扫描整个数组两遍，这里 n 是给定数字的位数。
      *
-     * 空间复杂度：O(n)。使用了大小为 nn 的数组 aa ，其中 n 是给定数字的位数。
+     * 空间复杂度：O(n)。使用了大小为 n 的数组 a ，其中 n 是给定数字的位数。
      * @param n
      * @return
      */
