@@ -1,6 +1,8 @@
 package main.java.com.study.leetCode.slidingWindow;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -48,9 +50,43 @@ public class LengthOfLongestSubstring {
         return result;
     }
 
+    /**
+     * 套用LeetCode-567-字符串的排列的滑动窗口模版
+     * 这need和valid都不需要，更新窗口内数据也只需要简单的更新计数器window即可。
+     * <p>
+     * 当window.get(c)值大于 1 时，说明窗口中存在重复字符，不符合条件，就该移动left缩小窗口了。
+     * <p>
+     * 唯一需要注意的是，在哪里更新结果res呢？我们要的是最长无重复子串，哪一个阶段可以保证窗口中的字符串是没有重复的呢？
+     * <p>
+     * 这里和之前不一样，要在收缩窗口完成后更新res，因为窗口收缩的 while 条件是存在重复元素，换句话说收缩完成后一定保证窗口中没有重复嘛。
+     *
+     * @param s
+     * @return
+     */
+    public static int lengthOfLongestSubstring2(String s) {
+        Map<Character, Integer> window = new HashMap<>();
+        int left = 0, right = 0, res = 0;
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            right++;
+            window.put(c, window.getOrDefault(c, 0) + 1);
+            while (window.get(c) > 1) {
+                char d = s.charAt(left);
+                left++;
+                window.put(d, window.get(d) - 1);
+                res = Math.max(res, right - left);
+            }
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         System.out.println(lengthOfLongestSubstring("abcabcbb"));
         System.out.println(lengthOfLongestSubstring("bbbbb"));
         System.out.println(lengthOfLongestSubstring("pwwkew"));
+
+        System.out.println(lengthOfLongestSubstring2("abcabcbb"));
+        System.out.println(lengthOfLongestSubstring2("bbbbb"));
+        System.out.println(lengthOfLongestSubstring2("pwwkew"));
     }
 }
