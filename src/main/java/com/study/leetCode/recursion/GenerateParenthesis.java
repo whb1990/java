@@ -44,8 +44,56 @@ public class GenerateParenthesis {
         return res;
     }
 
+    /**
+     * 深度优先搜索
+     *
+     * @param n
+     * @return
+     */
+    public static List<String> generateParenthesis2(int n) {
+        // 特判
+        if (n == 0) {
+            return Arrays.asList("");
+        }
+        List<String> res = new ArrayList<>();
+
+        // 执行深度优先遍历，搜索可能的结果
+        dfs("", n, n, res);
+        return res;
+    }
+
+    /**
+     * @param curStr 当前递归得到的结果
+     * @param left   左括号还有几个可以使用
+     * @param right  右括号还有几个可以使用
+     * @param res    结果集
+     */
+    private static void dfs(String curStr, int left, int right, List<String> res) {
+        // 因为每一次尝试，都使用新的字符串变量，所以无需回溯
+        // 在递归终止的时候，直接把它添加到结果集即可，注意与「力扣」第 46 题、第 39 题区分
+        if (left == 0 && right == 0) {
+            res.add(curStr);
+            return;
+        }
+
+        // 剪枝
+        if (left > right) {
+            return;
+        }
+
+        if (left > 0) {
+            dfs(curStr + "(", left - 1, right, res);
+        }
+
+        if (right > 0) {
+            dfs(curStr + ")", left, right - 1, res);
+        }
+    }
+
     public static void main(String[] args) {
         List<String> res = generateParenthesis(3);
+        System.out.println(Arrays.toString(res.toArray(new String[res.size()])));
+        res = generateParenthesis2(3);
         System.out.println(Arrays.toString(res.toArray(new String[res.size()])));
     }
 }
