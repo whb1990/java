@@ -62,20 +62,20 @@ public class CombinationSum {
         // 由于进入更深层的时候，小于 0 的部分被剪枝，因此递归终止条件值只判断等于 0 的情况
         if (target == 0) {
             res.add(new ArrayList<>(track));
-        } else {
-            // 重点理解这里从 begin 开始搜索的语意
-            for (int i = begin; i < candidates.length; i++) {
-                // 重点理解这里剪枝，前提是候选数组已经有序，
-                if (target - candidates[i] < 0) {
-                    break;
-                }
-                //choose 过程
-                track.add(candidates[i]);
-                //进入下一次决策，注意：由于每一个元素可以重复使用，下一轮搜索的起点依然是 i，这里非常容易弄错
-                backtrack(candidates, target - candidates[i], track, res, i);
-                //回溯unchoose过程
-                track.remove(track.size() - 1);
+            return;
+        }
+        // 重点理解这里从 begin 开始搜索的语意
+        for (int i = begin; i < candidates.length; i++) {
+            // 大剪枝：减去 candidates[i] 小于 0，减去后面的 candidates[i + 1]、candidates[i + 2] 肯定也小于 0（因为排好序了），因此用 break
+            if (target - candidates[i] < 0) {
+                break;
             }
+            //choose 过程
+            track.add(candidates[i]);
+            //进入下一次决策，注意：由于每一个元素可以重复使用，下一轮搜索的起点依然是 i，这里非常容易弄错
+            backtrack(candidates, target - candidates[i], track, res, i);
+            //回溯unchoose过程
+            track.remove(track.size() - 1);
         }
     }
 
