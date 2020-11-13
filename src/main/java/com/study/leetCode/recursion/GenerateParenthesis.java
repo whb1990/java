@@ -13,6 +13,7 @@ import java.util.List;
  * 数字 n 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 有效的 括号组合。
  *
  * 示例：
+ *
  * 输入：n = 3
  * 输出：[
  *        "((()))",
@@ -90,10 +91,47 @@ public class GenerateParenthesis {
         }
     }
 
+    /**
+     * 严格的回溯算法
+     * @param n
+     * @return
+     */
+    public static List<String> generateParenthesis3(int n) {
+        if (n <= 0) {
+            return new ArrayList<>();
+        }
+        List<String> res = new ArrayList<>();
+        StringBuffer track = new StringBuffer();
+        backtrack(n, n, track, res);
+        return res;
+    }
+
+    private static void backtrack(int left, int right, StringBuffer track, List<String> res) {
+        if (left == 0 && right == 0) {
+            res.add(track.toString());
+            return;
+        }
+        if (left > right) {
+            return;
+        }
+        if (left > 0) {
+            track.append("(");
+            backtrack(left - 1, right, track, res);
+            track.deleteCharAt(track.length() - 1);
+        }
+        if (right > 0) {
+            track.append(")");
+            backtrack(left, right - 1, track, res);
+            track.deleteCharAt(track.length() - 1);
+        }
+    }
+
     public static void main(String[] args) {
         List<String> res = generateParenthesis(3);
         System.out.println(Arrays.toString(res.toArray(new String[res.size()])));
         res = generateParenthesis2(3);
+        System.out.println(Arrays.toString(res.toArray(new String[res.size()])));
+        res = generateParenthesis3(3);
         System.out.println(Arrays.toString(res.toArray(new String[res.size()])));
     }
 }
