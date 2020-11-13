@@ -37,7 +37,7 @@ import java.util.List;
  *   [5]
  * ]
  */
-public class combinationSumⅡ {
+public class CombinationSumⅡ {
     /**
      * 回溯算法
      *

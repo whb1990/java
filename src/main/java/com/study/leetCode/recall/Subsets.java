@@ -42,6 +42,7 @@ public class Subsets {
     private static void backtrack(int[] nums, int begin, List<Integer> track, List<List<Integer>> res) {
         //注意这里没有写终止条件，不是说递归一定要有终止条件的吗，这里怎么没写，其实这里的终止条件
         //隐含在for循环中了，当然也可以写if(start>nums.length) rerurn;只不过这里省略了。
+        //走过的所有路径都是子集的一部分，所以都要加入到集合中
         res.add(new ArrayList<>(track));
         for (int i = begin; i < nums.length; i++) {
             //choose过程
