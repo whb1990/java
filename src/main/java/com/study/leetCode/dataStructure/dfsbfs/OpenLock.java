@@ -97,6 +97,13 @@ public class OpenLock {
         return -1;
     }
 
+    /**
+     * 向上拨动密码锁
+     *
+     * @param cur
+     * @param j
+     * @return
+     */
     private static String turnUp(String cur, int j) {
         char[] ch = cur.toCharArray();
         if (ch[j] == '9') {
@@ -107,6 +114,13 @@ public class OpenLock {
         return new String(ch);
     }
 
+    /**
+     * 向下拨动密码锁
+     *
+     * @param cur
+     * @param j
+     * @return
+     */
     private static String turnDown(String cur, int j) {
         char[] ch = cur.toCharArray();
         if (ch[j] == '0') {
@@ -117,10 +131,71 @@ public class OpenLock {
         return new String(ch);
     }
 
+    /**
+     * 双向BFS
+     *
+     * @param deadends
+     * @param target
+     * @return
+     */
+    public static int openLock2(String[] deadends, String target) {
+        Set<String> deads = new HashSet<>();
+        for (String dead : deadends) {
+            deads.add(dead);
+        }
+        if (deads.contains("0000") || deads.contains(target)) {
+            return -1;
+        }
+        Set<String> q1 = new HashSet<>();
+        Set<String> q2 = new HashSet<>();
+        Set<String> visited = new HashSet<>();
+        q1.add("0000");
+        q2.add(target);
+        int step = 0;
+        while (!q1.isEmpty() && !q2.isEmpty()) {
+            Set<String> tmp = new HashSet<>();
+            if (q1.size() > q2.size()) {
+                Set<String> temp = new HashSet<>();
+                temp = q1;
+                q1 = q2;
+                q2 = temp;
+            }
+            for (String cur : q1) {
+                if (deads.contains(cur)) {
+                    continue;
+                }
+                if (q2.contains(cur)) {
+                    return step;
+                }
+                visited.add(cur);
+                for (int j = 0; j < 4; j++) {
+                    String up = turnUp(cur, j);
+                    if (!visited.contains(up)) {
+                        tmp.add(up);
+                    }
+                    String down = turnDown(cur, j);
+                    if (!visited.contains(down)) {
+                        tmp.add(down);
+                    }
+                }
+            }
+            step++;
+            q1 = q2;
+            q2 = tmp;
+        }
+        return -1;
+    }
+
     public static void main(String[] args) {
+        System.out.println("-----------------单向BFS--------------------");
         System.out.println(openLock(new String[]{"0201", "0101", "0102", "1212", "2002"}, "0202"));
         System.out.println(openLock(new String[]{"8888"}, "0009"));
         System.out.println(openLock(new String[]{"8887", "8889", "8878", "8898", "8788", "8988", "7888", "9888"}, "8888"));
         System.out.println(openLock(new String[]{"0000"}, "8888"));
+        System.out.println("+++++++++++++++++++++++++双向BFS++++++++++++++++++++++");
+        System.out.println(openLock2(new String[]{"0201", "0101", "0102", "1212", "2002"}, "0202"));
+        System.out.println(openLock2(new String[]{"8888"}, "0009"));
+        System.out.println(openLock2(new String[]{"8887", "8889", "8878", "8898", "8788", "8988", "7888", "9888"}, "8888"));
+        System.out.println(openLock2(new String[]{"0000"}, "8888"));
     }
 }
