@@ -9,21 +9,53 @@ import java.util.List;
  * @author: whb
  * @date: 2020/5/30 18:48
  * @description: LeetCode-56-合并区间
+ * 难度：中等
  * 给出一个区间的集合，请合并所有重叠的区间。
  * <p>
  * 示例 1:
- * <p>
  * 输入: [[1,3],[2,6],[8,10],[15,18]]
  * 输出: [[1,6],[8,10],[15,18]]
  * 解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
- * 示例 2:
  * <p>
+ * 示例 2:
  * 输入: [[1,4],[4,5]]
  * 输出: [[1,5]]
  * 解释: 区间 [1,4] 和 [4,5] 可被视为重叠区间。
  */
 public class MergeIntervals {
-    public int[][] merge(int[][] intervals) {
+    /**
+     * 排序+双指针
+     * 将区间按照其左边界进行一次排序，之后使用双指针（两个变量）存储左右边界，遍历数组，
+     * 如果区间可以扩大当前边界则改变rightright的值，如果区间与当前合集没有交集，那么就添加当前区间到结果集合中，并重置left和right。
+     *
+     * @param intervals
+     * @return
+     */
+    public static int[][] merge2(int[][] intervals) {
+        if (intervals == null || intervals.length < 2) {
+            return intervals;
+        }
+        Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
+        int left = intervals[0][0], right = intervals[0][1];
+        List<int[]> res = new ArrayList<>();
+        for (int i = 1; i < intervals.length; i++) {
+            int[] inv = intervals[i];
+            if (right < inv[0]) {
+                //不存在重叠
+                res.add(new int[]{left, right});
+                left = inv[0];
+                right = inv[1];
+            } else if (right >= inv[0]) {
+                //存在重叠更新右边界
+                right = Math.max(right, inv[1]);
+            }
+        }
+        //添加最后一个区间
+        res.add(new int[]{left, right});
+        return res.toArray(new int[res.size()][]);
+    }
+
+    public static int[][] merge(int[][] intervals) {
         //边界判断
         if (intervals.length <= 1) {
             return intervals;
@@ -64,5 +96,36 @@ public class MergeIntervals {
             }
         }
         return result.toArray(new int[0][]);
+    }
+
+    /**
+     * 输出二维数组
+     *
+     * @param arr
+     */
+    private static void print2Arr(int[][] arr) {
+        StringBuffer buffer = new StringBuffer("[");
+        for (int i = 0; i < arr.length; i++) {
+            buffer.append("[");
+            for (int j = 0; j < arr[i].length; j++) {
+                buffer.append(arr[i][j]);
+                if (j != arr[i].length - 1) {
+                    buffer.append(",");
+                }
+            }
+            buffer.append("]");
+            if (i != arr.length - 1) {
+                buffer.append(",");
+            }
+        }
+        buffer.append("]");
+        System.out.println(buffer.toString());
+    }
+
+    public static void main(String[] args) {
+        print2Arr(merge(new int[][]{{1, 3}, {2, 6}, {8, 10}, {15, 18}}));
+        print2Arr(merge(new int[][]{{1, 4}, {4, 5}}));
+        print2Arr(merge2(new int[][]{{1, 3}, {2, 6}, {8, 10}, {15, 18}}));
+        print2Arr(merge2(new int[][]{{1, 4}, {4, 5}}));
     }
 }
