@@ -1,4 +1,6 @@
-package main.java.com.study.leetCode.dataStructure.array;
+package main.java.com.study.leetCode.interval;
+
+import main.java.com.study.leetCode.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +28,7 @@ public class MergeIntervals {
     /**
      * 排序+双指针
      * 将区间按照其左边界进行一次排序，之后使用双指针（两个变量）存储左右边界，遍历数组，
-     * 如果区间可以扩大当前边界则改变rightright的值，如果区间与当前合集没有交集，那么就添加当前区间到结果集合中，并重置left和right。
+     * 如果区间可以扩大当前边界则改变right的值，如果区间与当前合集没有交集，那么就添加当前区间到结果集合中，并重置left和right。
      *
      * @param intervals
      * @return
@@ -98,34 +100,10 @@ public class MergeIntervals {
         return result.toArray(new int[0][]);
     }
 
-    /**
-     * 输出二维数组
-     *
-     * @param arr
-     */
-    private static void print2Arr(int[][] arr) {
-        StringBuffer buffer = new StringBuffer("[");
-        for (int i = 0; i < arr.length; i++) {
-            buffer.append("[");
-            for (int j = 0; j < arr[i].length; j++) {
-                buffer.append(arr[i][j]);
-                if (j != arr[i].length - 1) {
-                    buffer.append(",");
-                }
-            }
-            buffer.append("]");
-            if (i != arr.length - 1) {
-                buffer.append(",");
-            }
-        }
-        buffer.append("]");
-        System.out.println(buffer.toString());
-    }
-
     public static void main(String[] args) {
-        print2Arr(merge(new int[][]{{1, 3}, {2, 6}, {8, 10}, {15, 18}}));
-        print2Arr(merge(new int[][]{{1, 4}, {4, 5}}));
-        print2Arr(merge2(new int[][]{{1, 3}, {2, 6}, {8, 10}, {15, 18}}));
-        print2Arr(merge2(new int[][]{{1, 4}, {4, 5}}));
+        CommonUtils.printInt2Arr(merge(new int[][]{{1, 3}, {2, 6}, {8, 10}, {15, 18}}));
+        CommonUtils.printInt2Arr(merge(new int[][]{{1, 4}, {4, 5}}));
+        CommonUtils.printInt2Arr(merge2(new int[][]{{1, 3}, {2, 6}, {8, 10}, {15, 18}}));
+        CommonUtils.printInt2Arr(merge2(new int[][]{{1, 4}, {4, 5}}));
     }
 }

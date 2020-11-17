@@ -1,4 +1,4 @@
-package main.java.com.study.leetCode.dataStructure.array;
+package main.java.com.study.leetCode.interval;
 
 import java.util.Arrays;
 
