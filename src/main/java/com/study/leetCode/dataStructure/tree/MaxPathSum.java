@@ -77,19 +77,22 @@ public class MaxPathSum {
     }
 
     /**
-     * 递归
+     * 返回经过root的单边分支最大和， 即Math.max(root, root+left, root+right)
      *
      * @param root
      * @return
      */
     private int dfs(TreeNode root) {
-        //返回当前子树的最大值
         if (root == null) {
             return 0;
         }
+        //计算左边分支最大值，左边分支如果为负数还不如不选择
         int leftMax = Math.max(0, dfs(root.left));
+        //计算右边分支最大值，右边分支如果为负数还不如不选择
         int rightMax = Math.max(0, dfs(root.right));
+        //left->root->right 作为路径与已经计算过历史最大值做比较
         result = Math.max(result, leftMax + root.val + rightMax);
+        // 返回经过root的单边最大分支给当前root的父节点计算使用
         return Math.max(leftMax, rightMax) + root.val;
     }
 }
