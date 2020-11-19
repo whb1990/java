@@ -50,19 +50,24 @@ public class IsSubPath {
         if (dfs(head, root)) {
             return true;
         }
+        //先判断当前的节点，如果不对，再看左子树和右子树
         return isSubPath(head, root.left) || isSubPath(head, root.right);
     }
 
     private boolean dfs(ListNode head, TreeNode root) {
+        //特判：链表走完了，返回true
         if (head == null) {
             return true;
         }
+        //特判：链表没走完，树走完了，这肯定不行，返回false
         if (root == null) {
             return false;
         }
+        //如果值不同，必定不是啊
         if (head.val != root.val) {
             return false;
         }
+        //如果值相同，继续看，左边和右边有一个满足即可
         return dfs(head.next, root.left) || dfs(head.next, root.right);
     }
 }
