@@ -4,6 +4,7 @@ package main.java.com.study.leetCode.list;
  * @author: whb
  * @date: 2020/4/1 17:27
  * @description: LeetCode-25-K个一组翻转链表
+ * 难度：困难
  * 给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
  * <p>
  * k 是一个正整数，它的值小于或等于链表的长度。
@@ -62,6 +63,12 @@ public class ReverseKGroup {
         return dummy.next;
     }
 
+    /**
+     * 反转链表
+     *
+     * @param head
+     * @return
+     */
     private ListNode reverse(ListNode head) {
         ListNode prev = null;
         ListNode curr = head;
@@ -72,5 +79,56 @@ public class ReverseKGroup {
             curr = next;
         }
         return prev;
+    }
+
+    /**
+     * 解法二
+     *
+     * @param head
+     * @param k
+     * @return
+     */
+    public ListNode reverseKGroup2(ListNode head, int k) {
+        if (head == null) {
+            return head;
+        }
+        // 区间 [a, b) 包含 k 个待反转元素
+        ListNode a, b;
+        a = b = head;
+        for (int i = 0; i < k; i++) {
+            // 不足 k 个，不需要反转，base case
+            if (b == null) {
+                return head;
+            }
+            b = b.next;
+        }
+        // 反转前 k 个元素
+        ListNode newHead = reverse(a, b);
+        // 递归反转后续链表并连接起来
+        a.next = reverseKGroup2(b, k);
+        return newHead;
+    }
+
+    /**
+     * 反转区间 [a, b) 的元素，注意是左闭右开
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    private ListNode reverse(ListNode a, ListNode b) {
+        ListNode pre, cur, next;
+        pre = null;
+        cur = a;
+        next = a;
+        // while 终止的条件改一下就行了
+        while (cur != b) {
+            next = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = next;
+        }
+        // 返回反转后的头结点
+        return pre;
     }
 }
