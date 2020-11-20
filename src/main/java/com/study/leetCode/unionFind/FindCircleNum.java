@@ -1,5 +1,8 @@
 package main.java.com.study.leetCode.unionFind;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * @author： whb
  * @description： LeetCode-547-朋友圈
@@ -38,6 +41,37 @@ public class FindCircleNum {
         }
     }
 
+    /**
+     * 广度优先搜索
+     * 从一个特定点开始，访问所有邻接的节点。然后对于这些邻接节点，依然通过访问邻接节点的方式，直到访问所有可以到达的节点。
+     * 按照一层一层的方式访问节点。使用 visited 数组记录是否被访问过。
+     * 增加 count 变量当一个连通块已经访问完但是还有节点没有被访问的时候。
+     *
+     * @param M
+     * @return
+     */
+    public int findCircleNumBfs(int[][] M) {
+        int[] visited = new int[M.length];
+        int count = 0;
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < M.length; i++) {
+            if (visited[i] == 0) {
+                queue.offer(i);
+                while (!queue.isEmpty()) {
+                    int poll = queue.remove();
+                    visited[poll] = 1;
+                    for (int j = 0; j < M.length; j++) {
+                        if (M[poll][j] == 1 && visited[j] == 0) {
+                            queue.offer(j);
+                        }
+                    }
+                }
+                count++;
+            }
+        }
+        return count;
+    }
+
     public static void main(String[] args) {
         FindCircleNum obj = new FindCircleNum();
         int[][] M = new int[][]{
@@ -46,11 +80,13 @@ public class FindCircleNum {
                 {0, 0, 1}
         };
         System.out.println(obj.findCircleNumDfs(M));
+        System.out.println(obj.findCircleNumBfs(M));
         M = new int[][]{
                 {1, 1, 0},
                 {1, 1, 1},
                 {0, 1, 1}
         };
         System.out.println(obj.findCircleNumDfs(M));
+        System.out.println(obj.findCircleNumBfs(M));
     }
 }
