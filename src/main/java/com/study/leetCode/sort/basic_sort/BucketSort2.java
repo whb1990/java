@@ -28,15 +28,10 @@ public class BucketSort2 {
      */
     public static int[] bucketSort(int[] unsorted, int bucketSize) {
         //计算待排序的范围
-        int min = unsorted[0];
-        int max = unsorted[0];
+        int min = unsorted[0], max = unsorted[0];
         for (int i = 1; i < unsorted.length; i++) {
-            if (unsorted[i] < min) {
-                min = unsorted[i];
-            }
-            if (unsorted[i] > max) {
-                max = unsorted[i];
-            }
+            min = Math.min(min, unsorted[i]);
+            max = Math.max(max, unsorted[i]);
         }
         //计算桶数量
         int bucketCount = (int) Math.floor((max - min) / bucketSize) + 1;
