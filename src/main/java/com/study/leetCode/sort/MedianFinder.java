@@ -1,18 +1,50 @@
 package main.java.com.study.leetCode.sort;
 
-import java.util.Comparator;
 import java.util.PriorityQueue;
-import java.util.Random;
 
 /**
  * @author: whb
  * @date: 2019/6/24 14:14
- * @description: 取中位数
+ * @description: LeetCode-295-数据流的中位数
+ * 难度：困难
+ * 标签：堆、设计
+ * 中位数是有序列表中间的数。如果列表长度是偶数，中位数则是中间两个数的平均值。
+ *
+ * 例如，
+ *
+ * [2,3,4] 的中位数是 3
+ *
+ * [2,3] 的中位数是 (2 + 3) / 2 = 2.5
+ *
+ * 设计一个支持以下两种操作的数据结构：
+ *
+ * void addNum(int num) - 从数据流中添加一个整数到数据结构中。
+ * double findMedian() - 返回目前所有元素的中位数。
+ *
+ * 示例：
+ *
+ * addNum(1)
+ * addNum(2)
+ * findMedian() -> 1.5
+ * addNum(3)
+ * findMedian() -> 2
+ *
+ * 进阶:
+ * 如果数据流中所有整数都在 0 到 100 范围内，你将如何优化你的算法？
+ * 如果数据流中 99% 的整数都在 0 到 100 范围内，你将如何优化你的算法？
  */
-public class FindMedian {
+public class MedianFinder {
 
-    //maxHeap保存较小的半边数据，minHeap保存较大的半边数据
-    private static PriorityQueue<Integer> maxHeap, minHeap;
+    /**
+     * maxHeap保存较小的半边数据，minHeap保存较大的半边数据
+     */
+    private PriorityQueue<Integer> maxHeap;
+    private PriorityQueue<Integer> minHeap;
+
+    public MedianFinder() {
+        this.maxHeap = new PriorityQueue<>((a, b) -> b - a);
+        this.minHeap = new PriorityQueue<>();
+    }
 
     /**
      * offer  新增头元素
@@ -24,7 +56,7 @@ public class FindMedian {
      *
      * @param num
      */
-    public static void addNumber(int num) {
+    public void addNum(int num) {
         if (maxHeap.size() == minHeap.size()) {
             if (minHeap.peek() != null && num > minHeap.peek()) {
                 maxHeap.offer(minHeap.poll());
@@ -46,7 +78,7 @@ public class FindMedian {
      * 获取中位数
      * 如果maxHeap和minHeap大小不同，则maxHeap肯定至少有一个元素。
      */
-    public static double getMedian() {
+    public double findMedian() {
         if (maxHeap.isEmpty()) {
             return -1;
         }
@@ -57,18 +89,11 @@ public class FindMedian {
     }
 
     public static void main(String[] args) {
-        Comparator<Integer> comparator = (left, right) -> {
-            return right.compareTo(left);
-        };
-        maxHeap = new PriorityQueue<>(100, comparator);
-        minHeap = new PriorityQueue<>(100);
-        Random random = new Random();
-        for (int i = 0; i <= 100; i++) {
-            int number = random.nextInt(200);
-            addNumber(number);
-        }
-        System.out.println("minHeap：" + minHeap);
-        System.out.println("maxHeap：" + maxHeap);
-        System.out.println("中位数：" + getMedian());
+        MedianFinder obj = new MedianFinder();
+        obj.addNum(1);
+        obj.addNum(2);
+        System.out.println(obj.findMedian());
+        obj.addNum(3);
+        System.out.println(obj.findMedian());
     }
 }
