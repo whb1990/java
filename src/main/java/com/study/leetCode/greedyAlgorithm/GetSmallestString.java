@@ -2,7 +2,7 @@ package main.java.com.study.leetCode.greedyAlgorithm;
 
 /**
  * @author： whb
- * @description： LeetCode-5606-具有给定数值的最小字符串
+ * @description： LeetCode-1663-具有给定数值的最小字符串
  * @date： 2020-11-23 9:35
  * 难度：中等
  * 标签：贪心算法

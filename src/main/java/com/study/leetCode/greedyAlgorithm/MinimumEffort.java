@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  * @author： whb
- * @description： LeetCode-5608-完成所有任务的最少初始能量
+ * @description： LeetCode-1665-完成所有任务的最少初始能量
  * @date： 2020-11-23 9:47
  * 难度：困难
  * 标签：贪心算法
