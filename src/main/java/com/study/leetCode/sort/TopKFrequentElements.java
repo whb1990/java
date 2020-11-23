@@ -5,7 +5,9 @@ import java.util.*;
 /**
  * @author: whb
  * @date: 2019/10/15 10:01
- * @description: LeetCode-247-出现频率最多的K个元素
+ * @description: LeetCode-347-出现频率最多的K个元素
+ * 难度：中等
+ * 标签：堆、哈希表
  * 题目描述：给定一个非空的整数数组，返回其中出现频率前 k 高的元素。
  * 示例 1:
  * 输入: nums = [1,1,1,2,2,3], k = 2
