@@ -74,6 +74,7 @@ public class MaxNumber {
         if (k == 0) {
             return new int[k];
         }
+        //单调递减栈
         Stack<Integer> stack = new Stack<>();
         int remain = nums.length - k;
         for (int num : nums) {
@@ -89,13 +90,14 @@ public class MaxNumber {
         }
         int[] res = new int[k];
         while (!stack.isEmpty()) {
+            //数组单调递减
             res[--k] = stack.pop();
         }
         return res;
     }
 
     /**
-     * 合并两个数组，升序
+     * 合并两个数组，降序
      *
      * @param nums1
      * @param nums2
@@ -140,7 +142,7 @@ public class MaxNumber {
 
     public static void main(String[] args) {
         System.out.println(Arrays.toString(maxNumber(new int[]{3, 4, 6, 5}, new int[]{9, 1, 2, 5, 8, 3}, 5)));
-        System.out.println(Arrays.toString(maxNumber(new int[]{6, 7}, new int[]{6, 0, 4}, 5)));
-        System.out.println(Arrays.toString(maxNumber(new int[]{3, 9}, new int[]{8, 9}, 3)));
+        //System.out.println(Arrays.toString(maxNumber(new int[]{6, 7}, new int[]{6, 0, 4}, 5)));
+        //System.out.println(Arrays.toString(maxNumber(new int[]{3, 9}, new int[]{8, 9}, 3)));
     }
 }
