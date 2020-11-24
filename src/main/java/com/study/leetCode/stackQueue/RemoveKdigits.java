@@ -9,22 +9,22 @@ import java.util.Stack;
  * 难度：中等
  * 标签：栈、贪心算法
  * 给定一个以字符串表示的非负整数 num，移除这个数中的 k 位数字，使得剩下的数字最小。
- *
+ * <p>
  * 注意:
- *
+ * <p>
  * num 的长度小于 10002 且 ≥ k。
  * num 不会包含任何前导零。
- *
+ * <p>
  * 示例 1 :
  * 输入: num = "1432219", k = 3
  * 输出: "1219"
  * 解释: 移除掉三个数字 4, 3, 和 2 形成一个新的最小的数字 1219。
- *
+ * <p>
  * 示例 2 :
  * 输入: num = "10200", k = 1
  * 输出: "200"
  * 解释: 移掉首位的 1 剩下的数字为 200. 注意输出不能有任何前导零。
- *
+ * <p>
  * 示例 3 :
  * 输入: num = "10", k = 2
  * 输出: "0"
@@ -65,7 +65,6 @@ public class RemoveKdigits {
             return "0";
         }
         Stack<Character> stack = new Stack<>();
-        int remain = num.length() - k;
         for (char c : num.toCharArray()) {
             while (k > 0 && !stack.isEmpty() && stack.peek() > c) {
                 stack.pop();
@@ -73,13 +72,16 @@ public class RemoveKdigits {
             }
             stack.push(c);
         }
+        while (k-- > 0) {
+            stack.pop();
+        }
         StringBuffer sb = new StringBuffer();
         while (!stack.isEmpty()) {
             sb.append(stack.pop());
         }
         //之所以要substring截取一下是因为有可能原始数字是升序的，导致上面的算法没有移除k个字符，故需要丢弃尾部的数字。
         //replaceAll是为了清除数字字符串的前缀0，但有可能字符串全是0导致清除后字符串变空
-        String res = sb.reverse().substring(0, remain).replaceAll("^(0+)", "");
+        String res = sb.reverse().toString().replaceAll("^(0+)", "");
         //所以返回的时候要判断如果字符串为空则返回0
         return "".equals(res) ? "0" : res;
     }
