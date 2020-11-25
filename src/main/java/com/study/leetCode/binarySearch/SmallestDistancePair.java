@@ -7,6 +7,7 @@ import java.util.Arrays;
  * @date: 2020/6/10 17:30
  * @description: LeetCode-719-找出第k小的距离对
  * 难度：困难
+ * 标签：堆、数组、二分查找
  * 给定一个整数数组，返回所有数对之间的第 k 个最小距离。一对 (A, B) 的距离被定义为 A 和 B 之间的绝对差值。
  * <p>
  * 示例 1:
@@ -29,7 +30,11 @@ import java.util.Arrays;
 public class SmallestDistancePair {
 
     /**
-     * 二分搜索+二分猜数字
+     * 首先需要对数组排序，这样能很快找出最大距离对，也就是nums[len-1]-nums[0]，
+     * 然后第k小的距离对一定会在最大和最小距离对之间，一般这种范围查找用到的就是二分查找，
+     * 核心是中间那一段for循环代码，mid指的是中间的距离对的长度，left和right分别是nums上的左右指针，
+     * 通过while循环来将所有<=mid的距离对的个数算出来，并加到count中，
+     * 如果count>=k，那么right=mid，如果count<k，那么left=mid+1；
      *
      * @param nums
      * @param k
