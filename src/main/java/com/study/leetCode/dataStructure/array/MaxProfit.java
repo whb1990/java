@@ -50,21 +50,15 @@ public class MaxProfit {
      * @return
      */
     public static int maxProfit(int[] prices) {
-        if (prices == null || prices.length <= 1) {
+        if(prices.length < 2){
             return 0;
         }
-        int min = prices[0], result = 0;
-        for (int i = 1; i < prices.length; i++) {
-            if (min > prices[i]) {
-                //让值始终保持最小
-                min = prices[i];
-            }
-            //当当前值大于最小值的时候计算差值
-            if (prices[i] > min && (prices[i] - min) > result) {
-                result = prices[i] - min;
-            }
+        int min = prices[0], res = 0;
+        for(int i = 1; i < prices.length; i++){
+            min = Math.min(min, prices[i]);
+            res = Math.max(res, prices[i] - min);
         }
-        return result;
+        return res;
     }
 
     public static void main(String[] args) {
