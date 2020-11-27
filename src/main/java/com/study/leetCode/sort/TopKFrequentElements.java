@@ -1,5 +1,7 @@
 package main.java.com.study.leetCode.sort;
 
+import com.google.common.primitives.Ints;
+
 import java.util.*;
 
 /**
@@ -12,7 +14,7 @@ import java.util.*;
  * 示例 1:
  * 输入: nums = [1,1,1,2,2,3], k = 2
  * 输出: [1,2]
- *
+ * <p>
  * 示例 2:
  * 输入: nums = [1], k = 1
  * 输出: [1]
@@ -35,7 +37,10 @@ public class TopKFrequentElements {
      * @param k
      * @return
      */
-    public static List<Integer> topKFrequent(int[] nums, int k) {
+    public static int[] topKFrequent(int[] nums, int k) {
+        if (nums.length == 0 || k <= 0) {
+            return new int[0];
+        }
         Map<Integer, Integer> frequencyForNum = new HashMap<>();
         for (int num : nums) {
             frequencyForNum.put(num, frequencyForNum.getOrDefault(num, 0) + 1);
@@ -59,7 +64,7 @@ public class TopKFrequentElements {
                 topK.addAll(buckets[i].subList(0, k - topK.size()));
             }
         }
-        return topK;
+        return Ints.toArray(topK);
     }
 
     /**
@@ -69,38 +74,32 @@ public class TopKFrequentElements {
      * @param k
      * @return
      */
-    public static List<Integer> topKFrequent2(int[] nums, int k) {
-        //统计每个元素出现的频次
-        Map<Integer, Integer> frenquencyMap = new HashMap<>();
-        for (int tmp : nums) {
-            frenquencyMap.put(tmp, frenquencyMap.getOrDefault(tmp, 0) + 1);
+    public static int[] topKFrequent2(int[] nums, int k) {
+        if (nums.length == 0 || k <= 0) {
+            return new int[0];
         }
-        //构建小顶堆，维持在k个元素
-        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((a, b) -> {
-            return frenquencyMap.get(b) - frenquencyMap.get(a);
-        });
-        for (Integer key : frenquencyMap.keySet()) {
-            if (priorityQueue.size() < k) {
-                priorityQueue.add(key);
-            } else if (frenquencyMap.get(key) > frenquencyMap.get(priorityQueue.peek())) {
-                priorityQueue.remove();
-                priorityQueue.add(key);
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> map.get(a) - map.get(b));
+        for (Integer key : map.keySet()) {
+            queue.offer(key);
+            if (queue.size() > k) {
+                queue.poll();
             }
         }
-        //输出结果
-        List<Integer> result = new ArrayList<>();
-        while (!priorityQueue.isEmpty()) {
-            result.add(priorityQueue.remove());
+        int[] res = new int[k];
+        while (!queue.isEmpty()) {
+            res[--k] = queue.poll();
         }
-        return result;
+        return res;
     }
 
     public static void main(String[] args) {
-        int[] nums = new int[]{1, 1, 1, 1, 2, 2, 3, 4};
-        int k = 2;
-        System.out.println(Arrays.toString(topKFrequent2(nums, k).toArray()));
-        nums = new int[]{4, 1, -1, 2, -1, 2, 3};
-        k = 2;
-        System.out.println(Arrays.toString(topKFrequent2(nums, k).toArray()));
+        System.out.println(Arrays.toString(topKFrequent(new int[]{1, 1, 1, 1, 2, 2, 3, 4}, 2)));
+        System.out.println(Arrays.toString(topKFrequent2(new int[]{1, 1, 1, 1, 2, 2, 3, 4}, 2)));
+        System.out.println(Arrays.toString(topKFrequent(new int[]{4, 1, -1, 2, -1, 2, 3}, 2)));
+        System.out.println(Arrays.toString(topKFrequent2(new int[]{4, 1, -1, 2, -1, 2, 3}, 2)));
     }
 }
