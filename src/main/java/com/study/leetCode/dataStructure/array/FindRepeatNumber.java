@@ -43,19 +43,24 @@ public class FindRepeatNumber {
 
     /**
      * 打标记法，将数组中元素减一取反来标志改位置已经遍历过，无需交换，速度更快
+     * 构建这个一个特殊的哈希表，下标0~n-1依次对应数值0~n-1有没有出现过，如果数字x第一次出现，那么下标x 的位置的元素应该为该位置的相反值，标识这个数字x出现过，
+     * 当下一次再遇到x，判断一下下标x的值是否<0，如果是的话表示之前已经访问过，就找到了这个重复的数。由于数值范围是0~n-1，对0取反还是0，难以判断是否重复，
+     * 故将所有数字都加1，再进行标记。
      *
      * @param nums
      * @return
      */
     public static int finRepeatNumber2(int[] nums) {
         for (int i = 0; i < nums.length; i++) {
-            // 注意，必须先加1再取反，若先取反，对应nums[i]==INT_MIN的情况，就会溢出报错
-            int idx = nums[i] < 0 ? -(nums[i] + 1) : nums[i];
-            if (nums[idx] < 0) {
-                return idx;
+            nums[i] = nums[i] + 1;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            int x = Math.abs(nums[i]);
+            if (nums[x - 1] > 0) {
+                nums[x - 1] *= -1;
+            } else {
+                return x - 1;
             }
-            // 注意，必须先取反再减1，若先加1再取反，对应nums[i]==INT_MAX的情况，就会溢出报错
-            nums[idx] = -nums[idx] - 1;
         }
         return -1;
     }
