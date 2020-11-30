@@ -9,35 +9,36 @@ import java.util.PriorityQueue;
  * 难度：中等
  * 标签：堆、贪心算法、排序、字符串
  * 给定一个字符串S，检查是否能重新排布其中的字母，使得两相邻的字符不同。
- *
+ * 
  * 若可行，输出任意可行的结果。若不可行，返回空字符串。
- *
+ * 
  * 示例 1:
  * 输入: S = "aab"
  * 输出: "aba"
- *
+ * 
  * 示例 2:
  * 输入: S = "aaab"
  * 输出: ""
  * 注意:
- *
+ * 
  * S 只包含小写字母并且长度在[1, 500]区间内。
  */
 public class ReorganizeString {
     /**
      * 基于最大堆的贪心算法
-     *
+     * 
      * 维护最大堆存储字母，堆顶元素为出现次数最多的字母。首先统计每个字母的出现次数，然后将出现次数大于 0 的字母加入最大堆。
-     *
+     * 
      * 当最大堆的元素个数大于 1 时，每次从最大堆取出两个字母，拼接到重构的字符串，然后将两个字母的出现次数分别减 1，并将剩余出现次数大于 0 的字母重新加入最大堆。
      * 由于最大堆中的元素都是不同的，因此取出的两个字母一定也是不同的，将两个不同的字母拼接到重构的字符串，可以确保相邻的字母都不相同。
-     *
+     * 
      * 如果最大堆变成空，则已经完成字符串的重构。如果最大堆剩下 1 个元素，则取出最后一个字母，拼接到重构的字符串。
-     *
+     * 
      * 对于长度为 n 的字符串，共有 n/2 次每次从最大堆取出两个字母的操作，当 n 是奇数时，还有一次从最大堆取出一个字母的操作，因此重构的字符串的长度一定是 n。
-     *
+     * 
      * 当 n 是奇数时，是否可能出现重构的字符串的最后两个字母相同的情况？
      * 如果最后一个字母在整个字符串中至少出现了 2 次，则在最后一次从最大堆取出两个字母时，该字母会先被选出，因此不会成为重构的字符串的倒数第二个字母，也不可能出现重构的字符串最后两个字母相同的情况。
+     *
      * @param S
      * @return
      */
@@ -88,8 +89,55 @@ public class ReorganizeString {
         return res.toString();
     }
 
+    /**
+     * 计数排序+贪心算法
+     *
+     * @param S
+     * @return
+     */
+    public static String reorganizeString2(String S) {
+        if (S.length() < 2) {
+            return "";
+        }
+        int[] counts = new int[26];
+        for (char c : S.toCharArray()) {
+            counts[c - 'a']++;
+        }
+        int maxIndex = 0;
+        for (int i = 0; i < counts.length; i++) {
+            if (counts[i] > counts[maxIndex]) {
+                maxIndex = i;
+            }
+        }
+        // (S.length() + 1+1) / 2 同时考虑了 奇数 和 偶数 情况
+        if (counts[maxIndex] > (S.length() + 1) / 2) {
+            return "";
+        }
+        char[] res = new char[S.length()];
+        int i = 0;
+        // 先把出现次数最多的字符放在偶数位置上
+        while (counts[maxIndex]-- > 0) {
+            res[i] = (char) ('a' + maxIndex);
+            i += 2;
+        }
+        // 考虑其他的字符
+        for (int j = 0; j < counts.length; j++) {
+            while (counts[j]-- > 0) {
+                // 偶数位置用完了，放到奇数位置
+                if (i >= S.length()) {
+                    i = 1;
+                }
+                res[i] = (char) ('a' + j);
+                i += 2;
+            }
+        }
+        return new String(res);
+    }
+
     public static void main(String[] args) {
         System.out.println(reorganizeString("aab"));
         System.out.println(reorganizeString("aaab"));
+        System.out.println(reorganizeString2("aab"));
+        System.out.println(reorganizeString2("aaab"));
     }
 }
