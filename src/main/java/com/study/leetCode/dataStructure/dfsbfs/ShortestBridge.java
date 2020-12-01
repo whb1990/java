@@ -64,6 +64,8 @@ public class ShortestBridge {
                 }
             }
         }
+        //定义上下左右四个方向
+        int[][] directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         //BFS 第一个岛屿向外扩散
         int step = 0;
         while (!queue.isEmpty()) {
@@ -71,55 +73,22 @@ public class ShortestBridge {
             int size = queue.size();
             while (size-- > 0) {
                 int[] arr = queue.poll();
-                int i = arr[0], j = arr[1];
                 //上下左右扩散
-                if (i - 1 >= 0) {
-                    if (A[i - 1][j] == 2) {
-                        continue;
+                for (int[] direct : directions) {
+                    int x = arr[0] + direct[0];
+                    int y = arr[1] + direct[1];
+                    if (x >= 0 && x < row && y >= 0 && y < col) {
+                        if (A[x][y] == 2) {
+                            continue;
+                        }
+                        //找到另一岛屿时, 返回step
+                        if (A[x][y] == 1) {
+                            return step;
+                        }
+                        //将扩散到的0置为2, 并入队
+                        A[x][y] = 2;
+                        queue.offer(new int[]{x, y});
                     }
-                    //找到另一岛屿时, 返回step
-                    if (A[i - 1][j] == 1) {
-                        return step;
-                    }
-                    //将扩散到的0置为2, 并入队
-                    queue.offer(new int[]{i - 1, j});
-                    A[i - 1][j] = 2;
-                }
-                if (i + 1 < row) {
-                    if (A[i + 1][j] == 2) {
-                        continue;
-                    }
-                    //找到另一岛屿时, 返回step
-                    if (A[i + 1][j] == 1) {
-                        return step;
-                    }
-                    //将扩散到的0置为2, 并入队
-                    queue.offer(new int[]{i + 1, j});
-                    A[i + 1][j] = 2;
-                }
-                if (j - 1 >= 0) {
-                    if (A[i][j - 1] == 2) {
-                        continue;
-                    }
-                    //找到另一岛屿时, 返回step
-                    if (A[i][j - 1] == 1) {
-                        return step;
-                    }
-                    //将扩散到的0置为2, 并入队
-                    queue.offer(new int[]{i, j - 1});
-                    A[i][j - 1] = 2;
-                }
-                if (j + 1 < col) {
-                    if (A[i][j + 1] == 2) {
-                        continue;
-                    }
-                    //找到另一岛屿时, 返回step
-                    if (A[i][j + 1] == 1) {
-                        return step;
-                    }
-                    //将扩散到的0置为2, 并入队
-                    queue.offer(new int[]{i, j + 1});
-                    A[i][j + 1] = 2;
                 }
             }
         }
@@ -150,21 +119,32 @@ public class ShortestBridge {
     }
 
     public static void main(String[] args) {
+        //1
         System.out.println(shortestBridge(new int[][]{
                 {0, 1},
                 {1, 0}
         }));
+        //2
         System.out.println(shortestBridge(new int[][]{
                 {0, 1, 0},
                 {0, 0, 0},
                 {0, 0, 1}
         }));
+        //1
         System.out.println(shortestBridge(new int[][]{
                 {1, 1, 1, 1, 1},
                 {1, 0, 0, 0, 1},
                 {1, 0, 1, 0, 1},
                 {1, 0, 0, 0, 1},
                 {1, 1, 1, 1, 1}
+        }));
+        //1
+        System.out.println(shortestBridge(new int[][]{
+                {0, 1, 0, 0, 0},
+                {0, 1, 0, 1, 1},
+                {0, 0, 0, 0, 1},
+                {0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0}
         }));
     }
 }
