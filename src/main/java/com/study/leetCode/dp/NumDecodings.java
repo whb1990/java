@@ -86,10 +86,47 @@ public class NumDecodings {
         return dp[dp.length - 1][0] + dp[dp.length - 1][1];
     }
 
+    /**
+     * 压缩空间
+     * 上楼梯的复杂版？
+     *     如果连续的两位数符合条件，就相当于一个上楼梯的题目，可以有两种选法：
+     *         1.一位数决定一个字母
+     *         2.两位数决定一个字母
+     *         就相当于dp(i) = dp[i-1] + dp[i-2];
+     *     如果不符合条件，又有两种情况
+     *         1.当前数字是0：
+     *             不好意思，这阶楼梯不能单独走，
+     *             dp[i] = dp[i-2]
+     *         2.当前数字不是0
+     *             不好意思，这阶楼梯太宽，走两步容易扯着步子，只能一个一个走
+     *             dp[i] = dp[i-1];
+     * @param s
+     * @return
+     */
+    public static int numDecodings2(String s) {
+        if (s.isEmpty() || s.charAt(0) == '0') {
+            return 0;
+        }
+        int[] dp = new int[s.length() + 1];
+        dp[0] = 1;
+        for (int i = 0; i < s.length(); i++) {
+            dp[i + 1] = s.charAt(i) == '0' ? 0 : dp[i];
+            if (i > 0 && (s.charAt(i - 1) == '1' || (s.charAt(i - 1) == '2' && s.charAt(i) <= '6'))) {
+                dp[i + 1] += dp[i - 1];
+            }
+        }
+        return dp[s.length()];
+    }
+
     public static void main(String[] args) {
         System.out.println(numDecodings("12"));
         System.out.println(numDecodings("226"));
         System.out.println(numDecodings("0"));
         System.out.println(numDecodings("1"));
+        System.out.println("============一维Dp=============");
+        System.out.println(numDecodings2("12"));
+        System.out.println(numDecodings2("226"));
+        System.out.println(numDecodings2("0"));
+        System.out.println(numDecodings2("1"));
     }
 }
