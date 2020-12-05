@@ -9,25 +9,25 @@ import java.util.Stack;
  * 难度：中等
  * 标签：字符串、栈
  * 实现一个基本的计算器来计算一个简单的字符串表达式的值。
- *
+ * <p>
  * 字符串表达式仅包含非负整数，+， - ，*，/ 四种运算符和空格  。 整数除法仅保留整数部分。
- *
+ * <p>
  * 示例 1:
- *
+ * <p>
  * 输入: "3+2*2"
  * 输出: 7
- *
+ * <p>
  * 示例 2:
- *
+ * <p>
  * 输入: " 3/2 "
  * 输出: 1
- *
+ * <p>
  * 示例 3:
- *
+ * <p>
  * 输入: " 3+5 / 2 "
  * 输出: 5
  * 说明：
- *
+ * <p>
  * 你可以假设所给定的表达式都是有效的。
  * 请不要使用内置的库函数 eval。
  */
@@ -98,38 +98,40 @@ public class Calculate {
      */
     public static int calculate2(String s) {
         Stack<Integer> stack = new Stack<>();
-        int i = 0;
-        while (i < s.length()) {
-            if (s.charAt(i) == ' ') {
-                i++;
-                continue;
+        // 记录算式中的数字
+        int num = 0;
+        // 记录 num 前的符号，初始化为 +
+        char sign = '+';
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            // 如果是数字，连续读取到 num
+            if (Character.isDigit(c)) {
+                num = 10 * num + (c - '0');
             }
-            char opt = s.charAt(i);
-            if (opt == '+' || opt == '-' || opt == '*' || opt == '/') {
-                i++;
-                while (i < s.length() && s.charAt(i) == ' ') {
-                    i++;
+
+            // 如果不是数字，就是遇到了下一个符号，
+            // 之前的数字和符号就要存进栈中
+            if (!Character.isDigit(c) && c != ' ' || i == s.length() - 1) {
+                switch (sign) {
+                    case '+':
+                        stack.push(num);
+                        break;
+                    case '-':
+                        stack.push(-num);
+                        break;
+                    case '*':
+                        stack.push(stack.pop() * num);
+                        break;
+                    case '/':
+                        stack.push(stack.pop() / num);
+                        break;
                 }
+                // 更新符号为当前符号，数字清零
+                sign = c;
+                num = 0;
             }
-            int num = 0;
-            while (i < s.length() && Character.isDigit(s.charAt(i))) {
-                //括号不能省略，否则造成整型溢出
-                num = num * 10 + (s.charAt(i) - '0');
-                i++;
-            }
-            switch (opt) {
-                case '-':
-                    num = -num;
-                    break;
-                case '*':
-                    num = stack.pop() * num;
-                    break;
-                case '/':
-                    num = stack.pop() / num;
-                    break;
-            }
-            stack.push(num);
         }
+        // 将栈中所有结果求和就是答案
         int res = 0;
         while (!stack.isEmpty()) {
             res += stack.pop();
