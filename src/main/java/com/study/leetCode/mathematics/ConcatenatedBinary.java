@@ -32,12 +32,20 @@ package main.java.com.study.leetCode.mathematics;
  * 1 <= n <= 105
  */
 public class ConcatenatedBinary {
+    /**
+     * （1）模拟拼接和求模运算的过程；
+     * （2）每次计算出当前数字拼接到当前结果时，当前结果需要左移的位数，让后拼接，并求模；
+     * @param n
+     * @return
+     */
     public static int concatenatedBinary(int n) {
         // 防止溢出
         long sum = 0;
         for (int i = 1; i <= n; i++) {
             int len = Integer.toBinaryString(i).length();
+            //正常的二进制左移一位，这里左移i二进制表达字符串的长度位
             sum <<= len;
+            //正常二进制这里只有0，1 ，这里为i
             sum += i;
             sum %= 1000000007;
         }
