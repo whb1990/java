@@ -60,13 +60,12 @@ public class TopKFrequentWords {
         while (!queue.isEmpty()) {
             res.add(0, queue.poll());
         }
-        System.out.println(Arrays.toString(res.toArray(new String[res.size()])));
         return res;
     }
 
     public static void main(String[] args) {
-        topKFrequent(new String[]{"i", "love", "leetcode", "i", "love", "coding"}, 2);
-        topKFrequent(new String[]{"the", "day", "is", "sunny", "the", "the", "the", "sunny", "is", "is"}, 4);
-        topKFrequent(new String[]{"i", "love", "leetcode", "i", "love", "coding"}, 3);
+        System.out.println(topKFrequent(new String[]{"i", "love", "leetcode", "i", "love", "coding"}, 2));
+        System.out.println(topKFrequent(new String[]{"the", "day", "is", "sunny", "the", "the", "the", "sunny", "is", "is"}, 4));
+        System.out.println(topKFrequent(new String[]{"i", "love", "leetcode", "i", "love", "coding"}, 3));
     }
 }
