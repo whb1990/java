@@ -45,46 +45,50 @@ public class MaximumGap {
      * @return
      */
     public int maximumGap(int[] nums) {
-        if (nums.length < 2) {
+        if (nums == null || nums.length < 2) {
             return 0;
         }
         //找到数组最小值、最大值
-        int min = 0, max = 0;
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
         for (int num : nums) {
-            min = Math.min(min, num);
-            max = Math.max(max, num);
+            min = Math.min(num, min);
+            max = Math.max(num, max);
         }
         //计算桶大小，桶数量至少是一个
-        int bucketSize = Math.max((max - min) / (nums.length - 1), 1);
-        Bucket[] buckets = new Bucket[(max - min) / bucketSize + 1];
+        int bucketSize = Math.max(1, (max - min) / (nums.length - 1));
+        //计算桶的数量
+        int bucketCount = (int) Math.floor((max - min) / bucketSize) + 1;
+        Bucket[] buckets = new Bucket[bucketCount];
         //入桶，每个桶只关心桶内的最大值和最小值
-        for (int i = 0; i < nums.length; i++) {
-            int bucketIndex = (nums[i] - min) / bucketSize;
-            if (buckets[bucketIndex] == null) {
-                buckets[bucketIndex] = new Bucket();
+        for (int num : nums) {
+            int index = (int) Math.floor((num - min) / bucketSize);
+            if (buckets[index] == null) {
+                buckets[index] = new Bucket();
             }
-            buckets[bucketIndex].min = Math.min(nums[i], buckets[bucketIndex].min);
-            buckets[bucketIndex].max = Math.max(nums[i], buckets[bucketIndex].max);
+            buckets[index].min = Math.min(num, buckets[index].min);
+            buckets[index].max = Math.max(num, buckets[index].max);
         }
-        //前一个桶的max
-        int preMax = -1;
-        //最大间隔
-        int maxGap = 0;
-        for (int i = 0; i < buckets.length; i++) {
-            //桶不为空，并且不是第一个桶
-            if (buckets[i] != null && preMax != -1) {
-                //桶之间的间隔
-                maxGap = Math.max(maxGap, buckets[i].min - preMax);
+        //preMax：前一个桶的max, maxGap：最大间隔
+        int preMax = -1, maxGap = 0;
+        for (Bucket bucket : buckets) {
+            ////桶为空，跳过
+            if (bucket == null) {
+                continue;
+            }
+            //不是第一个桶
+            if (preMax != -1) {
+                //更新最大间隔值
+                maxGap = Math.max(maxGap, bucket.min - preMax);
             }
             //记录前一个桶的 max
-            if (buckets[i] != null) {
-                preMax = buckets[i].max;
-            }
+            preMax = bucket.max;
         }
         return maxGap;
     }
 
-    //桶结构,桶内只关心最大值、最小值
+    /**
+     * 桶结构,桶内只关心最大值、最小值
+     */
     class Bucket {
         public int min = Integer.MIN_VALUE;
         public int max = Integer.MAX_VALUE;
