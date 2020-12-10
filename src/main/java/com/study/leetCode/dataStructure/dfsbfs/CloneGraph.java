@@ -5,7 +5,9 @@ import java.util.*;
 /**
  * @author: whb
  * @date: 2020/5/29 11:39
- * @description: LeetCode-克隆图
+ * @description: LeetCode-133-克隆图
+ * 难度：中等
+ * 标签：深度优先搜索、广度优先搜索、图
  * 给你无向 连通 图中一个节点的引用，请你返回该图的 深拷贝（克隆）。
  * <p>
  * 图中的每个节点都包含它的值 val（int） 和其邻居的列表（list[Node]）。
@@ -95,23 +97,22 @@ public class CloneGraph {
      * @param node
      * @return
      */
-    Map<Node, Node> nodeMap = new HashMap<>();
-
     public Node cloneGraphDFS(Node node) {
         if (node == null) {
             return null;
         }
-        return dfs(node);
+        Map<Node, Node> nodeMap = new HashMap<>();
+        return dfs(node, nodeMap);
     }
 
-    private Node dfs(Node node) {
+    private Node dfs(Node node, Map<Node, Node> nodeMap) {
         if (nodeMap.containsKey(node)) {
             return nodeMap.get(node);
         }
         Node clone = new Node(node.val, new ArrayList<>());
         nodeMap.put(node, clone);
         for (Node n : node.neighbors) {
-            Node tmp = dfs(n);
+            Node tmp = dfs(n, nodeMap);
             clone.neighbors.add(tmp);
         }
         return clone;
