@@ -40,8 +40,8 @@ public class CombinationSumⅢ {
             //如果找到一组合适的就把他加入到集合list中
             if (track.size() == k && n == 0) {
                 res.add(new ArrayList<>(track));
-                return;
             }
+            return;
         }
         // 2.选择列表，因为不能有重复的集合以及集合中不能有重复的数字，所以这里的i不能从0开始，
         // 要从上一个选择之后的下一个值开始
