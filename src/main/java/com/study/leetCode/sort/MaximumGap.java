@@ -90,7 +90,13 @@ public class MaximumGap {
      * 桶结构,桶内只关心最大值、最小值
      */
     class Bucket {
-        public int min = Integer.MIN_VALUE;
-        public int max = Integer.MAX_VALUE;
+        public int min = Integer.MAX_VALUE;
+        public int max = Integer.MIN_VALUE;
+    }
+
+    public static void main(String[] args) {
+        MaximumGap obj = new MaximumGap();
+        System.out.println(obj.maximumGap(new int[]{3, 6, 9, 1}));
+
     }
 }
